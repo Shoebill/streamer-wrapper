@@ -1,5 +1,7 @@
 # streamer-wrapper
 
+[![Build Status](http://ci.gtaun.net/buildStatus/icon?job=streamer-wrapper)](http://ci.gtaun.net/job/streamer-wrapper/)
+
 This project serves as a Wrapper between Shoebill and Incognito's Streamer Plugin.
 
 # Requirement

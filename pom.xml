@@ -7,6 +7,19 @@
     <groupId>net.gtaun.shoebill</groupId>
     <artifactId>streamer-wrapper</artifactId>
     <version>1.0-SNAPSHOT</version>
+    
+    <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <name>Releases</name>
+            <url>http://repo.gtaun.net/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Snapshots</name>
+            <url>http://repo.gtaun.net/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <repositories>
         <repository>
