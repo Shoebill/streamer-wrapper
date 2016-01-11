@@ -46,8 +46,8 @@ public class Dynamic3DTextLabel implements Destroyable {
         return null;
     }
 
-    public static Dynamic3DTextLabel create(String text, Color color, Location location) {
-        return create(text, color, location, 200f, 0, 200f);
+    public static Dynamic3DTextLabel create(String text, Color color, Location location, float drawDistance) {
+        return create(text, color, location, drawDistance, 0, 200f);
     }
 
     public static Dynamic3DTextLabel create(String text, Color color, Location location, float drawDistance, int testLOS, float streamDistance) {
