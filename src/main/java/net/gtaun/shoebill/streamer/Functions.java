@@ -47,6 +47,11 @@ public class Functions {
     private static AmxCallable getDynamicObjectMaterialText;
     private static AmxCallable setDynamicObjectMaterialText;
 
+    //Pickups:
+    private static AmxCallable createDynamicPickup;
+    private static AmxCallable destroyDynamicPickup;
+    private static AmxCallable isValidDynamicPickup;
+
     //3DTextLabels:
     private static AmxCallable createDynamic3DTextLabel;
     private static AmxCallable destroyDynamic3DTextLabel;
@@ -62,6 +67,7 @@ public class Functions {
         eventManagerNode = eventManager.createChildNode();
         AmxInstance amxInstance = AmxInstance.getDefault();
         findObjectFunctions(amxInstance);
+        findPickupFunctions(amxInstance);
         find3DTextLabelFunctions(amxInstance);
         findStreamerFunctions(amxInstance);
     }
@@ -96,6 +102,14 @@ public class Functions {
             isDynamicObjectMaterialTextUsed = instance.getNative("IsDynamicObjectMaterialTextUsed");
             getDynamicObjectMaterialText = instance.getNative("GetDynamicObjectMaterialText");
             setDynamicObjectMaterialText = instance.getNative("SetDynamicObjectMaterialText");
+        }
+    }
+
+    private static void findPickupFunctions(AmxInstance instance) {
+        if (createDynamicPickup == null) {
+            createDynamicPickup = instance.getNative("CreateDynamicPickup");
+            destroyDynamicPickup = instance.getNative("DestroyDynamicPickup");
+            isValidDynamicPickup = instance.getNative("IsValidDynamicPickup");
         }
     }
 
@@ -265,6 +279,24 @@ public class Functions {
 
     public static void setDynamicObjectMaterialText(int objectid, int materialindex, String text, ObjectMaterialSize materialsize, String fontFace, int fontSize, boolean bold, int fontColor, int backColor, int textAlignment) {
         setDynamicObjectMaterialText.call(objectid, materialindex, text, materialsize.getValue(), fontFace, fontSize, bold ? 1 : 0, fontColor, backColor, textAlignment);
+    }
+
+    //Pickups:
+
+    public static DynamicPickup createDynamicPickup(int modelid, int type, Location location, int playerid, float streamDistance) {
+        return createDynamicPickup(modelid, type, location.x, location.y, location.z, location.worldId, location.interiorId, playerid, streamDistance);
+    }
+    public static DynamicPickup createDynamicPickup(int modelid, int type, float x, float y, float z, int worldid, int interiorid, int playerid, float streamDistance) {
+        int id = (int) createDynamicPickup.call(modelid, type, x,y,z, worldid, interiorid, playerid, streamDistance);
+        return new DynamicPickup(id, modelid, type, playerid, streamDistance);
+    }
+
+    public static void destroyDynamicPickup(int id) {
+        destroyDynamicPickup.call(id);
+    }
+
+    public static boolean isValidDynamicPickup(int id) {
+        return (int)isValidDynamicPickup.call(id) > 0;
     }
 
     //3DTextLabels:
