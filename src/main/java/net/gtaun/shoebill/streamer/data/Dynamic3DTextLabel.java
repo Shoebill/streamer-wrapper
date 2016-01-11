@@ -14,7 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Valeriy on 11/1/2016.
+ * Created by valych on 11.01.2016 in project streamer-wrapper.
+ *
  */
 public class Dynamic3DTextLabel implements Destroyable {
     private static Collection<Dynamic3DTextLabel> textLabels;
