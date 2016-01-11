@@ -7,14 +7,12 @@ import net.gtaun.shoebill.amx.types.ReferenceFloat;
 import net.gtaun.shoebill.amx.types.ReferenceInt;
 import net.gtaun.shoebill.amx.types.ReferenceString;
 import net.gtaun.shoebill.constant.ObjectMaterialSize;
+import net.gtaun.shoebill.data.Color;
 import net.gtaun.shoebill.data.Location;
 import net.gtaun.shoebill.data.Vector3D;
 import net.gtaun.shoebill.event.amx.AmxLoadEvent;
 import net.gtaun.shoebill.object.Player;
-import net.gtaun.shoebill.streamer.data.DynamicObject;
-import net.gtaun.shoebill.streamer.data.DynamicObjectMaterial;
-import net.gtaun.shoebill.streamer.data.DynamicObjectMaterialText;
-import net.gtaun.shoebill.streamer.data.StreamerType;
+import net.gtaun.shoebill.streamer.data.*;
 import net.gtaun.util.event.EventManager;
 import net.gtaun.util.event.EventManagerNode;
 
@@ -49,6 +47,13 @@ public class Functions {
     private static AmxCallable getDynamicObjectMaterialText;
     private static AmxCallable setDynamicObjectMaterialText;
 
+    //3DTextLabels:
+    private static AmxCallable createDynamic3DTextLabel;
+    private static AmxCallable destroyDynamic3DTextLabel;
+    private static AmxCallable isValidDynamic3DTextLabel;
+    private static AmxCallable getDynamic3DTextLabelText;
+    private static AmxCallable updateDynamic3DTextLabelText;
+
     //Streamer:
     private static AmxCallable update;
     private static AmxCallable updateEx;
@@ -57,6 +62,7 @@ public class Functions {
         eventManagerNode = eventManager.createChildNode();
         AmxInstance amxInstance = AmxInstance.getDefault();
         findObjectFunctions(amxInstance);
+        find3DTextLabelFunctions(amxInstance);
         findStreamerFunctions(amxInstance);
     }
 
@@ -90,6 +96,16 @@ public class Functions {
             isDynamicObjectMaterialTextUsed = instance.getNative("IsDynamicObjectMaterialTextUsed");
             getDynamicObjectMaterialText = instance.getNative("GetDynamicObjectMaterialText");
             setDynamicObjectMaterialText = instance.getNative("SetDynamicObjectMaterialText");
+        }
+    }
+
+    private static void find3DTextLabelFunctions(AmxInstance instance) {
+        if (createDynamic3DTextLabel == null) {
+            createDynamic3DTextLabel = instance.getNative("CreateDynamic3DTextLabel");
+            destroyDynamic3DTextLabel = instance.getNative("DestroyDynamic3DTextLabel");
+            isValidDynamic3DTextLabel = instance.getNative("IsValidDynamic3DTextLabel");
+            getDynamic3DTextLabelText = instance.getNative("GetDynamic3DTextLabelText");
+            updateDynamic3DTextLabelText = instance.getNative("UpdateDynamic3DTextLabelText");
         }
     }
 
@@ -249,6 +265,45 @@ public class Functions {
 
     public static void setDynamicObjectMaterialText(int objectid, int materialindex, String text, ObjectMaterialSize materialsize, String fontFace, int fontSize, boolean bold, int fontColor, int backColor, int textAlignment) {
         setDynamicObjectMaterialText.call(objectid, materialindex, text, materialsize.getValue(), fontFace, fontSize, bold ? 1 : 0, fontColor, backColor, textAlignment);
+    }
+
+    //3DTextLabels:
+
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location) {
+        return createDynamic3DTextLabel(text, color, location, 200f, 0, 200f);
+    }
+
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance, int testLOS, float streamDistance) {
+        return createDynamic3DTextLabel(text, color, location, drawDistance, testLOS, -1, streamDistance);
+    }
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance, int testLOS, int playerid, float streamDistance) {
+        return createDynamic3DTextLabel(text, color, location, drawDistance, 0xFFFF, 0xFFFF, testLOS, playerid, streamDistance);
+    }
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance, int attachedPlayer, int attachedVehicle, int testLOS, int playerid, float streamDistance) {
+        return createDynamic3DTextLabel(text, color, location.x, location.y, location.z, drawDistance, attachedPlayer, attachedVehicle, testLOS, location.worldId, location.interiorId, playerid, streamDistance);
+    }
+
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, float x, float y, float z, float drawDistance, int attachedPlayer, int attachedVehicle, int testLOS, int worldid, int interiorid, int playerid, float streamDistance) {
+        int id = (int) createDynamic3DTextLabel.call(text, color.getValue(), x,y,z, drawDistance, attachedPlayer, attachedVehicle, testLOS, worldid, interiorid, playerid, streamDistance);
+        return new Dynamic3DTextLabel(id, playerid, streamDistance, drawDistance);
+    }
+
+    public static void destroyDynamic3DTextLabel(int id) {
+        destroyDynamic3DTextLabel.call(id);
+    }
+
+    public static boolean isValidDynamic3DTextLabel(int id) {
+        return (int)isValidDynamic3DTextLabel.call(id) > 0;
+    }
+
+    public static String getDynamic3DTextLabelText(int id) {
+        String text = "";
+        getDynamic3DTextLabelText.call(id, text, 1024); // Hope no-one will have length of a label text greater then 1024 :)
+        return text;
+    }
+
+    public static void updateDynamic3DTextLabelText(int id, Color color, String text) {
+        updateDynamic3DTextLabelText.call(id, color.getValue(), text);
     }
 
     public static void update(Player player) {
