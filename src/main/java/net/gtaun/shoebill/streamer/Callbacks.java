@@ -6,10 +6,8 @@ import net.gtaun.shoebill.constant.WeaponModel;
 import net.gtaun.shoebill.data.Vector3D;
 import net.gtaun.shoebill.object.Player;
 import net.gtaun.shoebill.streamer.data.DynamicObject;
-import net.gtaun.shoebill.streamer.event.DynamicObjectMovedEvent;
-import net.gtaun.shoebill.streamer.event.PlayerEditDynamicObjectEvent;
-import net.gtaun.shoebill.streamer.event.PlayerSelectDynamicObjectEvent;
-import net.gtaun.shoebill.streamer.event.PlayerShootDynamicObjectEvent;
+import net.gtaun.shoebill.streamer.data.DynamicPickup;
+import net.gtaun.shoebill.streamer.event.*;
 import net.gtaun.util.event.EventManager;
 
 /**
@@ -51,6 +49,12 @@ public class Callbacks {
                     new Vector3D((float) amxCallEvent.getParameters()[3], (float) amxCallEvent.getParameters()[4], (float) amxCallEvent.getParameters()[5]));
             eventManager.dispatchEvent(event, player, dynamicObject);
         }, "iiifff");
+        amxInstanceManager.hookCallback("OnPlayerPickUpDynamicPickup", amxCallEvent -> {
+            Player player = Player.get((int) amxCallEvent.getParameters()[0]);
+            DynamicPickup pickup = DynamicPickup.get((int) amxCallEvent.getParameters()[1]);
+            PlayerPickUpDynamicPickupEvent event = new PlayerPickUpDynamicPickupEvent(player, pickup);
+            eventManager.dispatchEvent(event);
+        }, "ii");
     }
 
     public static void unregisterHandlers() {
