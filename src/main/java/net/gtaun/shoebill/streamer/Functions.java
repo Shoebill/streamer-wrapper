@@ -96,7 +96,7 @@ public class Functions {
             attachDynamicObjectToPlayer = instance.getNative("AttachDynamicObjectToPlayer");
             attachDynamicObjectToVehicle = instance.getNative("AttachDynamicObjectToVehicle");
             editDynamicObject = instance.getNative("EditDynamicObject");
-            isDynamicObjectMaterialUsed = instance.getNative("IsDynamicOBjectMaterialUsed");
+            isDynamicObjectMaterialUsed = instance.getNative("IsDynamicObjectMaterialUsed");
             getDynamicObjectMaterial = instance.getNative("GetDynamicObjectMaterial");
             setDynamicObjectMaterial = instance.getNative("SetDynamicObjectMaterial");
             isDynamicObjectMaterialTextUsed = instance.getNative("IsDynamicObjectMaterialTextUsed");
