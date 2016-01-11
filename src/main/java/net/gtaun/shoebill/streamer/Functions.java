@@ -14,6 +14,7 @@ import net.gtaun.shoebill.object.Player;
 import net.gtaun.shoebill.streamer.data.DynamicObject;
 import net.gtaun.shoebill.streamer.data.DynamicObjectMaterial;
 import net.gtaun.shoebill.streamer.data.DynamicObjectMaterialText;
+import net.gtaun.shoebill.streamer.data.StreamerType;
 import net.gtaun.util.event.EventManager;
 import net.gtaun.util.event.EventManagerNode;
 
@@ -251,10 +252,18 @@ public class Functions {
     }
 
     public static void update(Player player) {
-        update.call(player.getId(), -1);
+        update(player, StreamerType.ALL);
+    }
+
+    public static void update(Player player, StreamerType streamerType) {
+        update.call(player.getId(), streamerType.getValue());
     }
 
     public static void updateEx(Player player, float x, float y, float z, int worldid, int interiorid) {
-        updateEx.call(player.getId(), x, y, z, worldid, interiorid, -1);
+        updateEx(player, x, y, z, worldid, interiorid, StreamerType.ALL);
+    }
+
+    public static void updateEx(Player player, float x, float y, float z, int worldid, int interiorid, StreamerType streamerType) {
+        updateEx.call(player.getId(), x, y, z, worldid, interiorid, streamerType.getValue());
     }
 }
