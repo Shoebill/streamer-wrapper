@@ -130,7 +130,7 @@ public class Functions {
 
 
     public static DynamicObject createDynamicObject(int modelid, Location location, Vector3D rotation) {
-        return createDynamicObject(modelid, location, rotation, 200f, 0f);
+        return createDynamicObject(modelid, location, rotation, DynamicObject.DEFAULT_STREAM_DISTANCE, DynamicObject.DEFAULT_DRAW_DISTANCE);
     }
 
     public static DynamicObject createDynamicObject(int modelid, Location location, Vector3D rotation, float streamDistance, float drawDistance) {
@@ -301,8 +301,8 @@ public class Functions {
 
     //3DTextLabels:
 
-    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location) {
-        return createDynamic3DTextLabel(text, color, location, 200f, 0, 200f);
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance) {
+        return createDynamic3DTextLabel(text, color, location, drawDistance, 0, Dynamic3DTextLabel.DEFAULT_STREAM_DISTANCE);
     }
 
     public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance, int testLOS, float streamDistance) {
