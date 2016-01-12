@@ -301,8 +301,8 @@ public class Functions {
 
     //3DTextLabels:
 
-    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location) {
-        return createDynamic3DTextLabel(text, color, location, Dynamic3DTextLabel.DEFAULT_STREAM_DISTANCE, 0, Dynamic3DTextLabel.DEFAULT_STREAM_DISTANCE);
+    public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance) {
+        return createDynamic3DTextLabel(text, color, location, drawDistance, 0, Dynamic3DTextLabel.DEFAULT_STREAM_DISTANCE);
     }
 
     public static Dynamic3DTextLabel createDynamic3DTextLabel(String text, Color color, Location location, float drawDistance, int testLOS, float streamDistance) {
