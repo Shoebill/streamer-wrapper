@@ -130,7 +130,7 @@ public class Functions {
 
 
     public static DynamicObject createDynamicObject(int modelid, Location location, Vector3D rotation) {
-        return createDynamicObject(modelid, location, rotation, 200f, 0f);
+        return createDynamicObject(modelid, location, rotation, DynamicObject.DEFAULT_STREAM_DISTANCE, DynamicObject.DEFAULT_DRAW_DISTANCE);
     }
 
     public static DynamicObject createDynamicObject(int modelid, Location location, Vector3D rotation, float streamDistance, float drawDistance) {

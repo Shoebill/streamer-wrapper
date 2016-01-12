@@ -18,6 +18,8 @@ import java.util.Set;
  * Copyright (c) 2015 Marvin Haschker. All rights reserved.
  */
 public class DynamicObject implements Destroyable {
+    public static float DEFAULT_STREAM_DISTANCE = 300f; // Corresponds to STREAMER_OBJECT_SD in streamer.inc
+    public static float DEFAULT_DRAW_DISTANCE = 0f; // Corresponds to STREAMER_OBJECT_DD in streamer.inc
 
     private static Collection<DynamicObject> objects;
 
@@ -49,7 +51,7 @@ public class DynamicObject implements Destroyable {
     }
 
     public static DynamicObject create(int modelid, Location location, Vector3D rotation) {
-        return create(modelid, location, rotation, 200.0f, 0.0f);
+        return create(modelid, location, rotation, DynamicObject.DEFAULT_STREAM_DISTANCE, DynamicObject.DEFAULT_DRAW_DISTANCE);
     }
 
     public static DynamicObject create(int modelid, Location location, Vector3D rotation, float streamDistance, float drawDistance) {
