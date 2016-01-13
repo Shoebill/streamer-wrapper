@@ -18,8 +18,8 @@ import java.util.Set;
  * Copyright (c) 2015 Marvin Haschker. All rights reserved.
  */
 public class DynamicObject implements Destroyable {
-    public static float DEFAULT_STREAM_DISTANCE = 300f; // Corresponds to STREAMER_OBJECT_SD in streamer.inc
-    public static float DEFAULT_DRAW_DISTANCE = 0f; // Corresponds to STREAMER_OBJECT_DD in streamer.inc
+    public static final float DEFAULT_STREAM_DISTANCE = 300f; // Corresponds to STREAMER_OBJECT_SD in streamer.inc
+    public static final float DEFAULT_DRAW_DISTANCE = 0f; // Corresponds to STREAMER_OBJECT_DD in streamer.inc
 
     private static Collection<DynamicObject> objects;
 
@@ -163,7 +163,7 @@ public class DynamicObject implements Destroyable {
     }
 
     public boolean isMaterialTextUsed(int materialindex) {
-        return Functions.isDynamicobjectMaterialTextUsed(id, materialindex);
+        return Functions.isDynamicObjectMaterialTextUsed(id, materialindex);
     }
 
     public DynamicObjectMaterialText getMaterialText(int materialindex) {

@@ -18,7 +18,7 @@ import java.util.Set;
  *
  */
 public class Dynamic3DTextLabel implements Destroyable {
-    public static float DEFAULT_STREAM_DISTANCE = 200f; // Corresponds to STREAMER_3D_TEXT_LABEL_SD in streamer.inc
+    public static final float DEFAULT_STREAM_DISTANCE = 200f; // Corresponds to STREAMER_3D_TEXT_LABEL_SD in streamer.inc
 
     private static Collection<Dynamic3DTextLabel> textLabels;
 

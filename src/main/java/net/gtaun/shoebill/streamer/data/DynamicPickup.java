@@ -13,7 +13,7 @@ import java.util.Set;
  * Created by valych on 11.01.2016 in project streamer-wrapper.
  */
 public class DynamicPickup implements Destroyable {
-    public static float DEFAULT_STREAM_DISTANCE = 200f; // Corresponds to STREAMER_PICKUP_SD in streamer.inc
+    public static final float DEFAULT_STREAM_DISTANCE = 200f; // Corresponds to STREAMER_PICKUP_SD in streamer.inc
 
     private static Collection<DynamicPickup> pickups;
 

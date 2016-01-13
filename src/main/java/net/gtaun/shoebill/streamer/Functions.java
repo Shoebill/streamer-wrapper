@@ -10,7 +10,6 @@ import net.gtaun.shoebill.constant.ObjectMaterialSize;
 import net.gtaun.shoebill.data.Color;
 import net.gtaun.shoebill.data.Location;
 import net.gtaun.shoebill.data.Vector3D;
-import net.gtaun.shoebill.event.amx.AmxLoadEvent;
 import net.gtaun.shoebill.object.Player;
 import net.gtaun.shoebill.streamer.data.*;
 import net.gtaun.util.event.EventManager;
@@ -260,7 +259,7 @@ public class Functions {
         setDynamicObjectMaterial.call(objectid, materialindex, modelid, txdname, texturename, materialcolor);
     }
 
-    public static boolean isDynamicobjectMaterialTextUsed(int objectid, int materialindex) {
+    public static boolean isDynamicObjectMaterialTextUsed(int objectid, int materialindex) {
         return (int) isDynamicObjectMaterialTextUsed.call(objectid, materialindex) > 0;
     }
 
