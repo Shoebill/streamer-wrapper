@@ -62,6 +62,7 @@ public class Callbacks {
         amxInstanceManager.unhookCallback("OnPlayerEditDynamicObject");
         amxInstanceManager.unhookCallback("OnPlayerSelectDynamicObject");
         amxInstanceManager.unhookCallback("OnPlayerShootDynamicObject");
+        amxInstanceManager.unhookCallback("OnPlayerPickUpDynamicPickup");
     }
 
 }
