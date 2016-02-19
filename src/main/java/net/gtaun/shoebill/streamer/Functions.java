@@ -6,10 +6,12 @@ import net.gtaun.shoebill.amx.AmxInstance;
 import net.gtaun.shoebill.amx.types.ReferenceFloat;
 import net.gtaun.shoebill.amx.types.ReferenceInt;
 import net.gtaun.shoebill.amx.types.ReferenceString;
+import net.gtaun.shoebill.constant.MapIconStyle;
 import net.gtaun.shoebill.constant.ObjectMaterialSize;
 import net.gtaun.shoebill.data.Color;
 import net.gtaun.shoebill.data.Location;
 import net.gtaun.shoebill.data.Vector3D;
+import net.gtaun.shoebill.exception.CreationFailedException;
 import net.gtaun.shoebill.object.Player;
 import net.gtaun.shoebill.streamer.data.*;
 import net.gtaun.util.event.EventManager;
@@ -58,6 +60,11 @@ public class Functions {
     private static AmxCallable getDynamic3DTextLabelText;
     private static AmxCallable updateDynamic3DTextLabelText;
 
+    //Mapicons:
+    private static AmxCallable createDynamicMapIcon;
+    private static AmxCallable destroyDynamicMapIcon;
+    private static AmxCallable isValidDynamicMapIcon;
+
     //Streamer:
     private static AmxCallable update;
     private static AmxCallable updateEx;
@@ -101,6 +108,9 @@ public class Functions {
             isDynamicObjectMaterialTextUsed = instance.getNative("IsDynamicObjectMaterialTextUsed");
             getDynamicObjectMaterialText = instance.getNative("GetDynamicObjectMaterialText");
             setDynamicObjectMaterialText = instance.getNative("SetDynamicObjectMaterialText");
+            createDynamicMapIcon = instance.getNative("CreateDynamicMapIcon");
+            destroyDynamicMapIcon = instance.getNative("DestroyDynamicMapIcon");
+            isValidDynamicMapIcon = instance.getNative("IsValidDynamicMapIcon");
         }
     }
 
@@ -351,5 +361,20 @@ public class Functions {
 
     public static void updateEx(Player player, float x, float y, float z, int worldid, int interiorid, StreamerType streamerType) {
         updateEx.call(player.getId(), x, y, z, worldid, interiorid, streamerType.getValue());
+    }
+
+    public static DynamicMapIcon createDynamicMapIcon(Location location, int type, Color color, int playerid, float streamDistance, MapIconStyle style) {
+        int id = (int) createDynamicMapIcon.call(location.x, location.y, location.z, type,
+                color.getValue(), location.worldId, location.interiorId, playerid, streamDistance, style.getValue());
+        if (id <= 0) throw new CreationFailedException("CreateDynamicMapIcon returned an invalid id.");
+        return new DynamicMapIcon(id, location, type, color, playerid, streamDistance, style);
+    }
+
+    public static void destroyDynamicMapIcon(DynamicMapIcon mapIcon) {
+        destroyDynamicMapIcon.call(mapIcon.getId());
+    }
+
+    public static boolean isValidDynamicMapIcon(DynamicMapIcon mapIcon) {
+        return (boolean) isValidDynamicMapIcon.call(mapIcon.getId());
     }
 }
