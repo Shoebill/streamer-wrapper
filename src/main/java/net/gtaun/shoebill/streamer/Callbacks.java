@@ -5,6 +5,7 @@ import net.gtaun.shoebill.amx.AmxInstanceManager;
 import net.gtaun.shoebill.constant.WeaponModel;
 import net.gtaun.shoebill.data.Vector3D;
 import net.gtaun.shoebill.object.Player;
+import net.gtaun.shoebill.streamer.data.DynamicArea;
 import net.gtaun.shoebill.streamer.data.DynamicObject;
 import net.gtaun.shoebill.streamer.data.DynamicPickup;
 import net.gtaun.shoebill.streamer.event.*;
@@ -49,12 +50,21 @@ public class Callbacks {
                     new Vector3D((float) amxCallEvent.getParameters()[3], (float) amxCallEvent.getParameters()[4], (float) amxCallEvent.getParameters()[5]));
             eventManager.dispatchEvent(event, player, dynamicObject);
         }, "iiifff");
-        amxInstanceManager.hookCallback("OnPlayerPickUpDynamicPickup", amxCallEvent -> {
+
+        amxInstanceManager.hookCallback("OnPlayerEnterDynamicArea", amxCallEvent -> {
             Player player = Player.get((int) amxCallEvent.getParameters()[0]);
-            DynamicPickup pickup = DynamicPickup.get((int) amxCallEvent.getParameters()[1]);
-            PlayerPickUpDynamicPickupEvent event = new PlayerPickUpDynamicPickupEvent(player, pickup);
+            DynamicArea area = DynamicArea.get((int) amxCallEvent.getParameters()[1]);
+            PlayerEnterDynamicAreaEvent event = new PlayerEnterDynamicAreaEvent(player, area);
             eventManager.dispatchEvent(event);
         }, "ii");
+
+        amxInstanceManager.hookCallback("OnPlayerLeaveDynamicArea", amxCallEvent -> {
+            Player player = Player.get((int) amxCallEvent.getParameters()[0]);
+            DynamicArea area = DynamicArea.get((int) amxCallEvent.getParameters()[1]);
+            PlayerLeaveDynamicAreaEvent event = new PlayerLeaveDynamicAreaEvent(player, area);
+            eventManager.dispatchEvent(event);
+        }, "ii");
+
     }
 
     public static void unregisterHandlers() {
@@ -63,6 +73,8 @@ public class Callbacks {
         amxInstanceManager.unhookCallback("OnPlayerSelectDynamicObject");
         amxInstanceManager.unhookCallback("OnPlayerShootDynamicObject");
         amxInstanceManager.unhookCallback("OnPlayerPickUpDynamicPickup");
+        amxInstanceManager.unhookCallback("OnPlayerEnterDynamicArea");
+        amxInstanceManager.unhookCallback("OnPlayerLeaveDynamicArea");
     }
 
 }
