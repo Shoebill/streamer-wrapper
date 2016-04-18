@@ -391,6 +391,8 @@ public class Functions {
         updateEx.call(player.getId(), x, y, z, worldid, interiorid, streamerType.getValue());
     }
 
+    //MapIcons:
+
     public static DynamicMapIcon createDynamicMapIcon(Location location, int type, Color color, int playerid, float streamDistance, MapIconStyle style) {
         int id = (int) createDynamicMapIcon.call(location.x, location.y, location.z, type,
                 color.getValue(), location.worldId, location.interiorId, playerid, streamDistance, style.getValue());
@@ -406,19 +408,7 @@ public class Functions {
         return (boolean) isValidDynamicMapIcon.call(mapIcon.getId());
     }
 
-     /*
-        private static AmxCallable createDynamicCircle;
-    private static AmxCallable createDynamicSphere;
-    private static AmxCallable createDynamicRectangle;
-    private static AmxCallable destroyDynamicArea;
-    private static AmxCallable isValidDynamicArea;
-    private static AmxCallable isPlayerInDynamicArea;
-    private static AmxCallable isPlayerInAnyDynamicArea;
-    private static AmxCallable isAnyPlayerInDynamicArea;
-    private static AmxCallable isAnyPlayerInAnyDynamicArea;
-    private static AmxCallable isPointInDynamicArea;
-    private static AmxCallable IsPointInAnyDynamicArea;
-         */
+    //Areas:
 
     public static DynamicCircle createDynamicCircle(Vector2D location, float size, int worldId, int interiorId, int playerId) {
         int id = (int) createDynamicCircle.call(location.x, location.y, size, worldId, interiorId, playerId);
