@@ -407,7 +407,7 @@ public class Functions {
     }
 
     public static boolean isValidDynamicMapIcon(DynamicMapIcon mapIcon) {
-        return (boolean) isValidDynamicMapIcon.call(mapIcon.getId());
+        return (int) isValidDynamicMapIcon.call(mapIcon.getId()) == 1;
     }
 
     //Areas:
