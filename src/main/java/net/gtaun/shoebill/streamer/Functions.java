@@ -67,6 +67,7 @@ public class Functions {
     private static AmxCallable createDynamicCircle;
     private static AmxCallable createDynamicSphere;
     private static AmxCallable createDynamicRectangle;
+    private static AmxCallable createDynamicCuboid;
     private static AmxCallable destroyDynamicArea;
     private static AmxCallable isValidDynamicArea;
     private static AmxCallable isPlayerInDynamicArea;
@@ -74,7 +75,7 @@ public class Functions {
     private static AmxCallable isAnyPlayerInDynamicArea;
     private static AmxCallable isAnyPlayerInAnyDynamicArea;
     private static AmxCallable isPointInDynamicArea;
-    private static AmxCallable IsPointInAnyDynamicArea;
+    private static AmxCallable isPointInAnyDynamicArea;
 
     //Streamer:
     private static AmxCallable update;
@@ -149,6 +150,7 @@ public class Functions {
             createDynamicCircle = instance.getNative("CreateDynamicCircle");
             createDynamicSphere = instance.getNative("CreateDynamicSphere");
             createDynamicRectangle = instance.getNative("CreateDynamicRectangle");
+            createDynamicCuboid = instance.getNative("CreateDynamicCuboid");
             destroyDynamicArea = instance.getNative("DestroyDynamicArea");
             isValidDynamicArea = instance.getNative("IsValidDynamicArea");
             isPlayerInDynamicArea = instance.getNative("IsPlayerInDynamicArea");
@@ -156,7 +158,7 @@ public class Functions {
             isAnyPlayerInDynamicArea = instance.getNative("IsAnyPlayerInDynamicArea");
             isAnyPlayerInAnyDynamicArea = instance.getNative("IsAnyPlayerInAnyDynamicArea");
             isPointInDynamicArea = instance.getNative("IsPointInDynamicArea");
-            IsPointInAnyDynamicArea = instance.getNative("IsPointInAnyDynamicArea");
+            isPointInAnyDynamicArea = instance.getNative("isPointInAnyDynamicArea");
         }
     }
 
@@ -425,6 +427,11 @@ public class Functions {
         return new DynamicRectangle(id, playerId);
     }
 
+    public static DynamicCuboid createDynamicCuboid(Area3D area, int worldId, int interiorId, int playerId) {
+        int id = (int) createDynamicCuboid.call(area.minX, area.minY, area.minZ, area.maxX, area.maxY, area.maxZ, worldId, interiorId, playerId);
+        return new DynamicCuboid(id, playerId);
+    }
+
     public static void destroyDynamicArea(DynamicArea area) {
         destroyDynamicArea.call(area.getId());
     }
@@ -454,6 +461,6 @@ public class Functions {
     }
 
     public static boolean IsPointInAnyDynamicArea(Vector3D point) {
-        return (int) isPointInDynamicArea.call(point.x, point.y, point.z) == 1;
+        return (int) isPointInAnyDynamicArea.call(point.x, point.y, point.z) == 1;
     }
 }
