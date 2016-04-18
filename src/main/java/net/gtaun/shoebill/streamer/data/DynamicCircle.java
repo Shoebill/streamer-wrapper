@@ -11,6 +11,10 @@ public class DynamicCircle extends DynamicArea {
         super(id, playerId);
     }
 
+    public static DynamicCircle create(Vector2D location, float size) {
+        return create(location, size, -1, -1, -1);
+    }
+
     public static DynamicCircle create(Vector2D location, float size, int worldId, int interiorId, int playerId) {
         DynamicCircle circle = Functions.createDynamicCircle(location, size, worldId, interiorId, playerId);
         DynamicArea.addArea(circle);

@@ -11,6 +11,10 @@ public class DynamicRectangle extends DynamicArea {
         super(id, playerId);
     }
 
+    public static DynamicRectangle create(Area area) {
+        return create(area, -1, -1, -1);
+    }
+
     public static DynamicRectangle create(Area area, int worldId, int interiorId, int playerId) {
         DynamicRectangle rectangle = Functions.createDynamicRectangle(area, worldId, interiorId, playerId);
         DynamicArea.addArea(rectangle);

@@ -11,6 +11,10 @@ public class DynamicSphere extends DynamicArea {
         super(id, playerId);
     }
 
+    public static DynamicSphere create(Vector3D location, float size) {
+        return create(location, size, -1, -1, -1);
+    }
+
     public static DynamicSphere create(Vector3D location, float size, int worldId, int interiorId, int playerId) {
         DynamicSphere sphere = Functions.createDynamicSphere(location, size, worldId, interiorId, playerId);
         DynamicArea.addArea(sphere);
