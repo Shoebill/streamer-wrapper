@@ -8,9 +8,7 @@ import net.gtaun.shoebill.amx.types.ReferenceInt;
 import net.gtaun.shoebill.amx.types.ReferenceString;
 import net.gtaun.shoebill.constant.MapIconStyle;
 import net.gtaun.shoebill.constant.ObjectMaterialSize;
-import net.gtaun.shoebill.data.Color;
-import net.gtaun.shoebill.data.Location;
-import net.gtaun.shoebill.data.Vector3D;
+import net.gtaun.shoebill.data.*;
 import net.gtaun.shoebill.exception.CreationFailedException;
 import net.gtaun.shoebill.object.Player;
 import net.gtaun.shoebill.streamer.data.*;
@@ -65,6 +63,20 @@ public class Functions {
     private static AmxCallable destroyDynamicMapIcon;
     private static AmxCallable isValidDynamicMapIcon;
 
+    //Areas:
+    private static AmxCallable createDynamicCircle;
+    private static AmxCallable createDynamicSphere;
+    private static AmxCallable createDynamicRectangle;
+    private static AmxCallable createDynamicCuboid;
+    private static AmxCallable destroyDynamicArea;
+    private static AmxCallable isValidDynamicArea;
+    private static AmxCallable isPlayerInDynamicArea;
+    private static AmxCallable isPlayerInAnyDynamicArea;
+    private static AmxCallable isAnyPlayerInDynamicArea;
+    private static AmxCallable isAnyPlayerInAnyDynamicArea;
+    private static AmxCallable isPointInDynamicArea;
+    private static AmxCallable isPointInAnyDynamicArea;
+
     //Streamer:
     private static AmxCallable update;
     private static AmxCallable updateEx;
@@ -76,6 +88,7 @@ public class Functions {
         findPickupFunctions(amxInstance);
         find3DTextLabelFunctions(amxInstance);
         findStreamerFunctions(amxInstance);
+        findAreaFunctions(amxInstance);
     }
 
     public static void unregisterHandlers() {
@@ -129,6 +142,23 @@ public class Functions {
             isValidDynamic3DTextLabel = instance.getNative("IsValidDynamic3DTextLabel");
             getDynamic3DTextLabelText = instance.getNative("GetDynamic3DTextLabelText");
             updateDynamic3DTextLabelText = instance.getNative("UpdateDynamic3DTextLabelText");
+        }
+    }
+
+    private static void findAreaFunctions(AmxInstance instance) {
+        if (createDynamicCircle == null) {
+            createDynamicCircle = instance.getNative("CreateDynamicCircle");
+            createDynamicSphere = instance.getNative("CreateDynamicSphere");
+            createDynamicRectangle = instance.getNative("CreateDynamicRectangle");
+            createDynamicCuboid = instance.getNative("CreateDynamicCuboid");
+            destroyDynamicArea = instance.getNative("DestroyDynamicArea");
+            isValidDynamicArea = instance.getNative("IsValidDynamicArea");
+            isPlayerInDynamicArea = instance.getNative("IsPlayerInDynamicArea");
+            isPlayerInAnyDynamicArea = instance.getNative("IsPlayerInAnyDynamicArea");
+            isAnyPlayerInDynamicArea = instance.getNative("IsAnyPlayerInDynamicArea");
+            isAnyPlayerInAnyDynamicArea = instance.getNative("IsAnyPlayerInAnyDynamicArea");
+            isPointInDynamicArea = instance.getNative("IsPointInDynamicArea");
+            isPointInAnyDynamicArea = instance.getNative("isPointInAnyDynamicArea");
         }
     }
 
@@ -363,6 +393,8 @@ public class Functions {
         updateEx.call(player.getId(), x, y, z, worldid, interiorid, streamerType.getValue());
     }
 
+    //MapIcons:
+
     public static DynamicMapIcon createDynamicMapIcon(Location location, int type, Color color, int playerid, float streamDistance, MapIconStyle style) {
         int id = (int) createDynamicMapIcon.call(location.x, location.y, location.z, type,
                 color.getValue(), location.worldId, location.interiorId, playerid, streamDistance, style.getValue());
@@ -375,6 +407,60 @@ public class Functions {
     }
 
     public static boolean isValidDynamicMapIcon(DynamicMapIcon mapIcon) {
-        return (boolean) isValidDynamicMapIcon.call(mapIcon.getId());
+        return (int) isValidDynamicMapIcon.call(mapIcon.getId()) == 1;
+    }
+
+    //Areas:
+
+    public static DynamicCircle createDynamicCircle(Vector2D location, float size, int worldId, int interiorId, int playerId) {
+        int id = (int) createDynamicCircle.call(location.x, location.y, size, worldId, interiorId, playerId);
+        return new DynamicCircle(id, playerId);
+    }
+
+    public static DynamicSphere createDynamicSphere(Vector3D location, float size, int worldId, int interiorId, int playerId) {
+        int id = (int) createDynamicSphere.call(location.x, location.y, location.z, size, worldId, interiorId, playerId);
+        return new DynamicSphere(id, playerId);
+    }
+
+    public static DynamicRectangle createDynamicRectangle(Area area, int worldId, int interiorId, int playerId) {
+        int id = (int) createDynamicRectangle.call(area.minX, area.minY, area.maxX, area.maxY, worldId, interiorId, playerId);
+        return new DynamicRectangle(id, playerId);
+    }
+
+    public static DynamicCuboid createDynamicCuboid(Area3D area, int worldId, int interiorId, int playerId) {
+        int id = (int) createDynamicCuboid.call(area.minX, area.minY, area.minZ, area.maxX, area.maxY, area.maxZ, worldId, interiorId, playerId);
+        return new DynamicCuboid(id, playerId);
+    }
+
+    public static void destroyDynamicArea(DynamicArea area) {
+        destroyDynamicArea.call(area.getId());
+    }
+
+    public static boolean isValidDynamicArea(DynamicArea area) {
+        return (int) isValidDynamicArea.call(area.getId()) == 1;
+    }
+
+    public static boolean isPlayerInDynamicArea(int playerId, DynamicArea area) {
+        return (int) isPlayerInDynamicArea.call(playerId, area.getId(), 0) == 1;
+    }
+
+    public static boolean isPlayerInAnyDynamicArea(int playerId) {
+        return (int) isPlayerInAnyDynamicArea.call(playerId, 0) == 1;
+    }
+
+    public static boolean isAnyPlayerInDynamicArea(DynamicArea area) {
+        return (int) isAnyPlayerInDynamicArea.call(area.getId(), 0) == 1;
+    }
+
+    public static boolean isAnyPlayerInAnyDynamicArea() {
+        return (int) isAnyPlayerInAnyDynamicArea.call(0) == 1;
+    }
+
+    public static boolean isPointInDynamicArea(DynamicArea area, Vector3D point) {
+        return (int) isPointInDynamicArea.call(area.getId(), point.x, point.y, point.z) == 1;
+    }
+
+    public static boolean IsPointInAnyDynamicArea(Vector3D point) {
+        return (int) isPointInAnyDynamicArea.call(point.x, point.y, point.z) == 1;
     }
 }
