@@ -17,7 +17,7 @@ public class DynamicSphere extends DynamicArea {
 
     public static DynamicSphere create(Vector3D location, float size, int worldId, int interiorId, int playerId) {
         DynamicSphere sphere = Functions.createDynamicSphere(location, size, worldId, interiorId, playerId);
-        DynamicArea.addArea(sphere);
+        areas.add(sphere);
         return sphere;
     }
 }

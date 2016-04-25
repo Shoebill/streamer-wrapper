@@ -17,7 +17,7 @@ public class DynamicRectangle extends DynamicArea {
 
     public static DynamicRectangle create(Area area, int worldId, int interiorId, int playerId) {
         DynamicRectangle rectangle = Functions.createDynamicRectangle(area, worldId, interiorId, playerId);
-        DynamicArea.addArea(rectangle);
+        areas.add(rectangle);
         return rectangle;
     }
 }

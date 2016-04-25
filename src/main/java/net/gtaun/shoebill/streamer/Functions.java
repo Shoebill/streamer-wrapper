@@ -11,6 +11,7 @@ import net.gtaun.shoebill.constant.ObjectMaterialSize;
 import net.gtaun.shoebill.data.*;
 import net.gtaun.shoebill.exception.CreationFailedException;
 import net.gtaun.shoebill.object.Player;
+import net.gtaun.shoebill.object.Vehicle;
 import net.gtaun.shoebill.streamer.data.*;
 import net.gtaun.util.event.EventManager;
 import net.gtaun.util.event.EventManagerNode;
@@ -76,6 +77,9 @@ public class Functions {
     private static AmxCallable isAnyPlayerInAnyDynamicArea;
     private static AmxCallable isPointInDynamicArea;
     private static AmxCallable isPointInAnyDynamicArea;
+    private static AmxCallable attachDynamicAreaToObject;
+    private static AmxCallable attachDynamicAreaToPlayer;
+    private static AmxCallable attachDynamicAreaToVehicle;
 
     //Streamer:
     private static AmxCallable update;
@@ -159,6 +163,9 @@ public class Functions {
             isAnyPlayerInAnyDynamicArea = instance.getNative("IsAnyPlayerInAnyDynamicArea");
             isPointInDynamicArea = instance.getNative("IsPointInDynamicArea");
             isPointInAnyDynamicArea = instance.getNative("isPointInAnyDynamicArea");
+            attachDynamicAreaToObject = instance.getNative("AttachDynamicAreaToObject");
+            attachDynamicAreaToPlayer = instance.getNative("AttachDynamicAreaToPlayer");
+            attachDynamicAreaToVehicle = instance.getNative("AttachDynamicAreaToVehicle");
         }
     }
 
@@ -462,5 +469,17 @@ public class Functions {
 
     public static boolean IsPointInAnyDynamicArea(Vector3D point) {
         return (int) isPointInAnyDynamicArea.call(point.x, point.y, point.z) == 1;
+    }
+
+    public static void attachDynamicAreaToObject(DynamicArea area, DynamicObject object, Vector3D offset) {
+        attachDynamicAreaToObject.call(area.getId(), object.getId(), 2, 0xFFFF, offset.x, offset.y, offset.z);
+    }
+
+    public static void attachDynamicAreaToPlayer(DynamicArea area, Player player, Vector3D offset) {
+        attachDynamicAreaToPlayer.call(area.getId(), player.getId(), offset.x, offset.y, offset.z);
+    }
+
+    public static void attachDynamicAreaToVehicle(DynamicArea area, Vehicle vehicle, Vector3D offset) {
+        attachDynamicAreaToVehicle.call(area.getId(), vehicle.getId(), offset.x, offset.y, offset.z);
     }
 }

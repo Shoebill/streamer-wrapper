@@ -3,6 +3,7 @@ package net.gtaun.shoebill.streamer.data;
 import net.gtaun.shoebill.data.Vector3D;
 import net.gtaun.shoebill.object.Destroyable;
 import net.gtaun.shoebill.object.Player;
+import net.gtaun.shoebill.object.Vehicle;
 import net.gtaun.shoebill.streamer.Functions;
 
 import java.util.ArrayList;
@@ -13,18 +14,11 @@ import java.util.Set;
 /**
  * Created by Valeriy on 18/4/2016.
  */
-public class DynamicArea implements Destroyable {
-    static Collection<DynamicArea> areas;
+public abstract class DynamicArea implements Destroyable {
+    protected static Collection<DynamicArea> areas;
 
     static {
         areas = new ArrayList<>();
-    }
-
-    private int id, playerId;
-
-    public DynamicArea(int id, int playerId) {
-        this.id = id;
-        this.playerId = playerId;
     }
 
     public static Set<DynamicArea> get() {
@@ -40,8 +34,11 @@ public class DynamicArea implements Destroyable {
         return null;
     }
 
-    static boolean addArea(DynamicArea area) {
-        return areas.add(area);
+    private int id, playerId;
+
+    DynamicArea(int id, int playerId) {
+        this.id = id;
+        this.playerId = playerId;
     }
 
     public boolean isPlayerInRange(Player player) {
@@ -52,27 +49,24 @@ public class DynamicArea implements Destroyable {
         return Functions.isPointInDynamicArea(this, point);
     }
 
-    // TODO: implement
-    public void attachToPlayer() {
-        throw new UnsupportedOperationException();
+    public void attachToPlayer(Player player, Vector3D offset) {
+        Functions.attachDynamicAreaToPlayer(this, player, offset);
     }
 
-    // TODO: implement
-    public void attachToObject() {
-        throw new UnsupportedOperationException();
+    public void attachToObject(DynamicObject object, Vector3D offset) {
+        Functions.attachDynamicAreaToObject(this, object, offset);
     }
 
-    // TODO: implement
-    public void attachToVehicle() {
-        throw new UnsupportedOperationException();
+    public void attachToVehicle(Vehicle vehicle, Vector3D offset) {
+        Functions.attachDynamicAreaToVehicle(this, vehicle, offset);
     }
 
     public int getId() {
         return id;
     }
 
-    public int getPlayerId() {
-        return playerId;
+    public Player getPlayer() {
+        return Player.get(playerId);
     }
 
     @Override
@@ -88,11 +82,12 @@ public class DynamicArea implements Destroyable {
     }
 
     private void selfRemove() {
-        areas.remove(this);
+        if(areas.contains(this))
+            areas.remove(this);
     }
 
     @Override
     public boolean isDestroyed() {
-        return false;
+        return !Functions.isValidDynamicArea(this);
     }
 }
