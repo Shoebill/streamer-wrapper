@@ -184,7 +184,7 @@ object Functions {
                                           area: Int = -1, priority: Int = 0): DynamicObject {
         val id = createDynamicObject!!
                 .call(modelid, location.x, location.y, location.z, rotation.x, rotation.y, rotation.z,
-                        location.worldId, location.interiorId, playerId, streamDistance, drawDistance, area, priority) as Int
+                        location.worldId, location.interiorId, playerId, streamDistance, drawDistance, area/*, priority*/) as Int
         return DynamicObject(id, modelid, playerId, streamDistance, drawDistance)
     }
 
@@ -329,7 +329,7 @@ object Functions {
                             area: Int = -1, priority: Int = 0): DynamicPickup {
 
         val id = createDynamicPickup!!.call(modelid, type, location.x, location.y, location.z, location.worldId,
-                location.interiorId, playerId, streamDistance, area, priority) as Int
+                location.interiorId, playerId, streamDistance, area/*, priority*/) as Int
         return DynamicPickup(id, modelid, type, Player.get(playerId), streamDistance)
     }
 
@@ -348,7 +348,7 @@ object Functions {
 
         val id = createDynamic3DTextLabel!!.call(text, color.value, location.x, location.y, location.z,
                 drawDistance, attachedPlayer, attachedVehicle, testLOS, location.worldId, location.interiorId, playerid,
-                streamDistance, area, priority) as Int
+                streamDistance, area/*, priority*/) as Int
         return Dynamic3DTextLabel(id, text, playerid, color, streamDistance, drawDistance)
     }
 
@@ -388,7 +388,7 @@ object Functions {
         val areaId = if (area == null) -1 else area.id
 
         val id = createDynamicMapIcon!!.call(location.x, location.y, location.z, type,
-                color.value, location.worldId, location.interiorId, playerId, streamDistance, style.value, areaId, priority) as Int
+                color.value, location.worldId, location.interiorId, playerId, streamDistance, style.value, areaId/*, priority*/) as Int
         if (id <= 0) throw CreationFailedException("CreateDynamicMapIcon returned an invalid id.")
         return DynamicMapIcon(id, location, type, color, Player.get(playerId), streamDistance, style)
     }
