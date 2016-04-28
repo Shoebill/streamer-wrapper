@@ -2,7 +2,8 @@
 
 package net.gtaun.shoebill.streamer
 
-import net.gtaun.shoebill.Shoebill
+import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.`object`.Vehicle
 import net.gtaun.shoebill.amx.AmxCallable
 import net.gtaun.shoebill.amx.AmxInstance
 import net.gtaun.shoebill.amx.types.ReferenceFloat
@@ -12,9 +13,6 @@ import net.gtaun.shoebill.constant.MapIconStyle
 import net.gtaun.shoebill.constant.ObjectMaterialSize
 import net.gtaun.shoebill.data.*
 import net.gtaun.shoebill.exception.CreationFailedException
-import net.gtaun.shoebill.`object`.Player
-import net.gtaun.shoebill.`object`.Vehicle
-import net.gtaun.shoebill.resource.Gamemode
 import net.gtaun.shoebill.streamer.data.*
 import net.gtaun.util.event.EventManager
 import net.gtaun.util.event.EventManagerNode
@@ -132,7 +130,7 @@ object Functions {
             destroyDynamicMapIcon = instance.getNative("DestroyDynamicMapIcon")
             isValidDynamicMapIcon = instance.getNative("IsValidDynamicMapIcon")
         } else {
-            Gamemode.logger().error("Could not find Streamer functions! Are you sure that the streamer is loading " +
+            Streamer.get().logger.error("Could not find Streamer functions! Are you sure that the streamer is loading " +
                     "before Shoebill (check server.cfg plugins order)?")
         }
     }

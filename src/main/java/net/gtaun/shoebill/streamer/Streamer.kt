@@ -1,11 +1,9 @@
 package net.gtaun.shoebill.streamer
 
-import net.gtaun.shoebill.data.Location
-import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.resource.Plugin
 import net.gtaun.shoebill.streamer.data.StreamerType
-import net.gtaun.util.event.EventManager
 
 
 /**
@@ -14,8 +12,18 @@ import net.gtaun.util.event.EventManager
  */
 class Streamer : Plugin() {
 
+    internal companion object {
+        private var instance: Streamer? = null
+
+        @JvmStatic
+        fun get(): Streamer {
+            return instance!!
+        }
+    }
+
     @Throws(Throwable::class)
     override fun onEnable() {
+        instance = this
         val eventManager = eventManager
         Functions.registerHandlers(eventManager)
         Callbacks.registerHandlers(eventManager)
