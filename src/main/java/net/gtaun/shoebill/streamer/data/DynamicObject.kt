@@ -137,10 +137,13 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
         @JvmStatic
         fun create(modelid: Int, location: Location, rotation: Vector3D = Vector3D(0f, 0f, 0f),
                    streamDistance: Float = DynamicObject.DEFAULT_STREAM_DISTANCE,
-                   drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE, player: Player? = null): DynamicObject {
+                   drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE,
+                   priority: Int = 0, player: Player? = null, area: DynamicArea? = null): DynamicObject {
             val playerId = if (player == null) -1 else player.id
+            val areaId = if (area == null) -1 else area.id
 
-            val `object` = Functions.createDynamicObject(modelid, location, rotation, playerId, streamDistance, drawDistance)
+            val `object` = Functions.createDynamicObject(modelid, location, rotation, streamDistance, drawDistance,
+                    playerId, areaId, priority)
             objects.add(`object`)
             return `object`
         }

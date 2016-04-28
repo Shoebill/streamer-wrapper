@@ -14,7 +14,7 @@ import java.util.HashSet
  * Created by marvin on 19.02.16.
  * Copyright (c) 2015 Marvin Haschker. All rights reserved.
  */
-class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: Color, val playerid: Int,
+class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: Color, val player: Player?,
                      val streamDistance: Float, val style: MapIconStyle) : Destroyable {
 
     var id: Int = id
@@ -59,7 +59,7 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
         @JvmOverloads
         @JvmStatic
         fun create(location: Location, type: Int, color: Color, streamDistance: Float = DEFAULT_STREAM_DISTANCE,
-                   style: MapIconStyle = DEFAULT_ICON_STYLE, player: Player? = null): DynamicMapIcon {
+                   style: MapIconStyle = DEFAULT_ICON_STYLE, priority: Int = 0, player: Player? = null, area: DynamicArea? = null): DynamicMapIcon {
             val playerId = if (player == null) -1 else player.id
 
             val `object` = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style)

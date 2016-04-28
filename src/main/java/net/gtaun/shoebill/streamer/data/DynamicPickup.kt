@@ -11,7 +11,7 @@ import java.util.HashSet
 /**
  * Created by valych on 11.01.2016 in project streamer-wrapper.
  */
-class DynamicPickup(id: Int, val modelid: Int, val type: Int, val playerid: Int, val streamDistance: Float) : Destroyable {
+class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player?, val streamDistance: Float) : Destroyable {
 
     var id: Int = id
         private set
@@ -54,10 +54,12 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val playerid: Int,
         @JvmOverloads
         @JvmStatic
         fun create(modelId: Int, type: Int, location: Location,
-                   streamDistance: Float = DynamicPickup.DEFAULT_STREAM_DISTANCE, player: Player? = null): DynamicPickup {
+                   streamDistance: Float = DynamicPickup.DEFAULT_STREAM_DISTANCE, priority: Int = 0,
+                   player: Player? = null, area: DynamicArea? = null): DynamicPickup {
             val playerId = if (player == null) -1 else player.id
+            val areaId = if (area == null) -1 else area.id
 
-            val pickup = Functions.createDynamicPickup(modelId, type, location, playerId, streamDistance)
+            val pickup = Functions.createDynamicPickup(modelId, type, location, playerId, streamDistance, areaId, priority)
             pickups.add(pickup)
             return pickup
         }

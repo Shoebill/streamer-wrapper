@@ -71,7 +71,7 @@ class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerI
         @JvmStatic
         @JvmOverloads
         fun create(text: String, color: Color, location: Location, drawDistance: Float = 200f, testLOS: Int = 0,
-                   streamDistance: Float = DEFAULT_STREAM_DISTANCE, attachedPlayer: Player? = null,
+                   streamDistance: Float = DEFAULT_STREAM_DISTANCE, priority: Int = 0, attachedPlayer: Player? = null,
                    attachedVehicle: Vehicle? = null, player: Player? = null,
                    area: DynamicArea? = null): Dynamic3DTextLabel {
 
@@ -81,7 +81,7 @@ class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerI
             val areaId = if (area == null) -1 else area.id
 
             val textLabel = Functions.createDynamic3DTextLabel(text, color, location, drawDistance, attachedPlayerId,
-                    attachedVehicleId, testLOS, playerId, streamDistance, areaId)
+                    attachedVehicleId, testLOS, playerId, streamDistance, areaId, priority)
             textLabels.add(textLabel)
             return textLabel
         }

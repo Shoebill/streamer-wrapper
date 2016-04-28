@@ -182,17 +182,11 @@ object Functions {
 
     @JvmOverloads fun createDynamicObject(modelid: Int, location: Location, rotation: Vector3D,
                                           streamDistance: Float = DynamicObject.DEFAULT_STREAM_DISTANCE,
-                                          drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE): DynamicObject {
-        return createDynamicObject(modelid, location, rotation, -1, streamDistance, drawDistance)
-    }
-
-    fun createDynamicObject(modelid: Int, location: Location, rotation: Vector3D, playerid: Int, streamDistance: Float, drawDistance: Float): DynamicObject {
-        return createDynamicObject(modelid, location.x, location.y, location.z, rotation.x, rotation.y, rotation.z, location.worldId, location.interiorId, playerid, streamDistance, drawDistance)
-    }
-
-    fun createDynamicObject(modelid: Int, x: Float, y: Float, z: Float, rX: Float, rY: Float, rZ: Float, worldId: Int, interiorId: Int, playerId: Int, streamDistance: Float, drawDistance: Float): DynamicObject {
-        createDynamicObject = Shoebill.get().amxInstanceManager.amxInstances.iterator().next().getNative("CreateDynamicObject")
-        val id = createDynamicObject!!.call(modelid, x, y, z, rX, rY, rZ, worldId, interiorId, playerId, streamDistance, drawDistance) as Int
+                                          drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE, playerId: Int = -1,
+                                          area: Int = -1, priority: Int = 0): DynamicObject {
+        val id = createDynamicObject!!
+                .call(modelid, location.x, location.y, location.z, rotation.x, rotation.y, rotation.z,
+                        location.worldId, location.interiorId, playerId, streamDistance, drawDistance, area, priority) as Int
         return DynamicObject(id, modelid, playerId, streamDistance, drawDistance)
     }
 
@@ -332,13 +326,13 @@ object Functions {
 
     //Pickups:
 
-    fun createDynamicPickup(modelid: Int, type: Int, location: Location, playerid: Int, streamDistance: Float): DynamicPickup {
-        return createDynamicPickup(modelid, type, location.x, location.y, location.z, location.worldId, location.interiorId, playerid, streamDistance)
-    }
+    @JvmOverloads
+    fun createDynamicPickup(modelid: Int, type: Int, location: Location, playerId: Int = 0, streamDistance: Float = 200f,
+                            area: Int = -1, priority: Int = 0): DynamicPickup {
 
-    fun createDynamicPickup(modelid: Int, type: Int, x: Float, y: Float, z: Float, worldid: Int, interiorid: Int, playerid: Int, streamDistance: Float): DynamicPickup {
-        val id = createDynamicPickup!!.call(modelid, type, x, y, z, worldid, interiorid, playerid, streamDistance) as Int
-        return DynamicPickup(id, modelid, type, playerid, streamDistance)
+        val id = createDynamicPickup!!.call(modelid, type, location.x, location.y, location.z, location.worldId,
+                location.interiorId, playerId, streamDistance, area, priority) as Int
+        return DynamicPickup(id, modelid, type, Player.get(playerId), streamDistance)
     }
 
     fun destroyDynamicPickup(id: Int) {
@@ -349,12 +343,14 @@ object Functions {
         return isValidDynamicPickup!!.call(id) as Int > 0
     }
 
+    @JvmOverloads
     fun createDynamic3DTextLabel(text: String, color: Color, location: Location,
-                                 drawDistance: Float, attachedPlayer: Int, attachedVehicle: Int, testLOS: Int,
-                                 playerid: Int, streamDistance: Float, area: Int): Dynamic3DTextLabel {
+                                 drawDistance: Float = 200f, attachedPlayer: Int = -1, attachedVehicle: Int = -1, testLOS: Int = 0,
+                                 playerid: Int = -1, streamDistance: Float = 200f, area: Int = -1, priority: Int = 0): Dynamic3DTextLabel {
+
         val id = createDynamic3DTextLabel!!.call(text, color.value, location.x, location.y, location.z,
                 drawDistance, attachedPlayer, attachedVehicle, testLOS, location.worldId, location.interiorId, playerid,
-                streamDistance, area) as Int
+                streamDistance, area, priority) as Int
         return Dynamic3DTextLabel(id, text, playerid, color, streamDistance, drawDistance)
     }
 
@@ -386,11 +382,17 @@ object Functions {
 
     //MapIcons:
 
-    fun createDynamicMapIcon(location: Location, type: Int, color: Color, playerid: Int, streamDistance: Float, style: MapIconStyle): DynamicMapIcon {
+    @JvmOverloads
+    fun createDynamicMapIcon(location: Location, type: Int, color: Color, playerId: Int = -1,
+                             streamDistance: Float = 200f,
+                             style: MapIconStyle = MapIconStyle.LOCAL, area: DynamicArea? = null,
+                             priority: Int = 0): DynamicMapIcon {
+        val areaId = if (area == null) -1 else area.id
+
         val id = createDynamicMapIcon!!.call(location.x, location.y, location.z, type,
-                color.value, location.worldId, location.interiorId, playerid, streamDistance, style.value) as Int
+                color.value, location.worldId, location.interiorId, playerId, streamDistance, style.value, areaId, priority) as Int
         if (id <= 0) throw CreationFailedException("CreateDynamicMapIcon returned an invalid id.")
-        return DynamicMapIcon(id, location, type, color, playerid, streamDistance, style)
+        return DynamicMapIcon(id, location, type, color, Player.get(playerId), streamDistance, style)
     }
 
     fun destroyDynamicMapIcon(mapIcon: DynamicMapIcon) {
