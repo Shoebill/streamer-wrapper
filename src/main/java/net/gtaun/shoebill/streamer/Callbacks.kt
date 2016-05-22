@@ -23,15 +23,13 @@ object Callbacks {
     fun registerHandlers(eventManager: EventManager) {
         amxInstanceManager.apply {
             hookCallback("OnDynamicObjectMoved", { amxCallEvent ->
-                val `object` = DynamicObject[amxCallEvent.parameters[0] as Int] ?:
-                        throw NullPointerException("Invalid object received from OnDynamicObjectMoved event.")
+                val `object` = DynamicObject[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
                 val event = DynamicObjectMovedEvent(`object`)
                 eventManager.dispatchEvent(event, `object`)
             }, "i")
             hookCallback("OnPlayerEditDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
-                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?:
-                        throw NullPointerException("Invalid object received from OnPlayerEditDynamicObject event.")
+                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEditDynamicObjectEvent(`object`, player, amxCallEvent.parameters[2] as Int,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float),
                         Vector3D(amxCallEvent.parameters[6] as Float, amxCallEvent.parameters[7] as Float, amxCallEvent.parameters[8] as Float))
@@ -39,8 +37,7 @@ object Callbacks {
             }, "iiiffffff")
             hookCallback("OnPlayerSelectDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
-                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?:
-                        throw NullPointerException("Invalid object received from OnPlayerSelectDynamicObject event.")
+                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val modelid = amxCallEvent.parameters[2] as Int
                 val event = PlayerSelectDynamicObjectEvent(`object`, player, modelid,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
@@ -49,8 +46,7 @@ object Callbacks {
             hookCallback("OnPlayerShootDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
                 val weaponModel = WeaponModel.get(amxCallEvent.parameters[1] as Int)
-                val dynamicObject = DynamicObject[amxCallEvent.parameters[2] as Int] ?:
-                        throw NullPointerException("Invalid object received from OnPlayerShootDynamicObject event.")
+                val dynamicObject = DynamicObject[amxCallEvent.parameters[2] as Int] ?: return@hookCallback
                 val event = PlayerShootDynamicObjectEvent(dynamicObject, player, weaponModel,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
                 eventManager.dispatchEvent(event, player, dynamicObject)
@@ -58,24 +54,21 @@ object Callbacks {
 
             hookCallback("OnPlayerEnterDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
-                val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?:
-                        throw NullPointerException("Invalid area received from OnPlayerEnterDynamicArea event.")
+                val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEnterDynamicAreaEvent(player, area)
                 eventManager.dispatchEvent(event)
             }, "ii")
 
             hookCallback("OnPlayerLeaveDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
-                val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?:
-                        throw NullPointerException("Invalid area received from OnPlayerLeaveDynamicArea event.")
+                val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerLeaveDynamicAreaEvent(player, area)
                 eventManager.dispatchEvent(event)
             }, "ii")
 
             hookCallback("OnPlayerPickUpDynamicPickup", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
-                val pickup = DynamicPickup[amxCallEvent.parameters[1] as Int] ?:
-                        throw NullPointerException("Invalid pickup received from OnPlayerPickUpDynamicPickup event.")
+                val pickup = DynamicPickup[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerPickUpDynamicPickupEvent(player, pickup)
                 eventManager.dispatchEvent(event)
             }, "ii")
