@@ -56,18 +56,14 @@ abstract class DynamicArea internal constructor(id: Int, val player: Player?) : 
         return !Functions.isValidDynamicArea(this)
     }
 
-    internal companion object {
+    companion object {
         @JvmStatic
         protected var areas = mutableListOf<DynamicArea>()
 
         @JvmStatic
-        fun get(): Set<DynamicArea> {
-            return HashSet(areas)
-        }
+        fun get(): Set<DynamicArea> = HashSet(areas)
 
         @JvmStatic
-        operator fun get(id: Int): DynamicArea? {
-            return areas.find { it.id == id }
-        }
+        operator fun get(id: Int): DynamicArea? = areas.find { it.id == id }
     }
 }

@@ -1,22 +1,20 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.constant.ObjectMaterialSize
-import net.gtaun.shoebill.data.Location
-import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.`object`.Destroyable
 import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.constant.ObjectMaterialSize
+import net.gtaun.shoebill.data.Location
+import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.Functions
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 /**
  * Created by marvin on 23.07.15 in project streamer-wrapper.
  * Copyright (c) 2015 Marvin Haschker. All rights reserved.
  */
-class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDistance: Float, val drawDistance: Float)
-: Destroyable {
+class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDistance: Float,
+                    val drawDistance: Float) : Destroyable {
     var id: Int = id
         private set
 
@@ -117,21 +115,18 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
         return !Functions.isValidDynamicObject(id)
     }
 
-    internal companion object {
+    companion object {
+
         @JvmField val DEFAULT_STREAM_DISTANCE = 300f // Corresponds to STREAMER_OBJECT_SD in streamer.inc
         @JvmField val DEFAULT_DRAW_DISTANCE = 0f // Corresponds to STREAMER_OBJECT_DD in streamer.inc
 
         private var objects = mutableListOf<DynamicObject>()
 
         @JvmStatic
-        fun get(): Set<DynamicObject> {
-            return HashSet(objects)
-        }
+        fun get(): Set<DynamicObject> = HashSet(objects)
 
         @JvmStatic
-        operator fun get(id: Int): DynamicObject? {
-            return objects.find { it.id == id }
-        }
+        operator fun get(id: Int): DynamicObject? = objects.find { it.id == id }
 
         @JvmOverloads
         @JvmStatic

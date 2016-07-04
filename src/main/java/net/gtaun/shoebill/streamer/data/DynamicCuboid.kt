@@ -8,7 +8,7 @@ import net.gtaun.shoebill.streamer.Functions
  * Created by Valeriy on 18/4/2016.
  */
 class DynamicCuboid(id: Int, player: Player?) : DynamicArea(id, player) {
-    internal companion object {
+    companion object {
         @JvmOverloads
         @JvmStatic
         fun create(area: Area3D, worldId: Int = -1, interiorId: Int = -1, player: Player? = null): DynamicCuboid {

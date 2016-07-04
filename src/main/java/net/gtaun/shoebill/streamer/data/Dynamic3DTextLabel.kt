@@ -2,16 +2,13 @@
 
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.data.Color
-import net.gtaun.shoebill.data.Location
-import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.`object`.Destroyable
 import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.data.Color
+import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.streamer.Functions
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 /**
  * Created by valych and marvin on 11.01.2016 in project streamer-wrapper.
@@ -53,20 +50,16 @@ class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerI
         return !Functions.isValidDynamic3DTextLabel(id)
     }
 
-    protected companion object {
+    companion object {
 
         @JvmField
         val DEFAULT_STREAM_DISTANCE = 200f // Corresponds to STREAMER_3D_TEXT_LABEL_SD in streamer.inc
 
         private var textLabels: MutableList<Dynamic3DTextLabel> = mutableListOf()
 
-        @JvmStatic fun get(): Set<Dynamic3DTextLabel> {
-            return HashSet(textLabels)
-        }
+        @JvmStatic fun get(): Set<Dynamic3DTextLabel> = HashSet(textLabels)
 
-        @JvmStatic operator fun get(id: Int): Dynamic3DTextLabel? {
-            return textLabels.find { it.id == id }
-        }
+        @JvmStatic operator fun get(id: Int): Dynamic3DTextLabel? = textLabels.find { it.id == id }
 
         @JvmStatic
         @JvmOverloads

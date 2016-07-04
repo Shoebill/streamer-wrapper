@@ -8,7 +8,7 @@ import net.gtaun.shoebill.streamer.Functions
  * Created by Valeriy on 18/4/2016.
  */
 class DynamicSphere(id: Int, player: Player?) : DynamicArea(id, player) {
-    internal companion object {
+    companion object {
         @JvmOverloads
         @JvmStatic
         fun create(location: Location, size: Float, player: Player? = null): DynamicSphere {

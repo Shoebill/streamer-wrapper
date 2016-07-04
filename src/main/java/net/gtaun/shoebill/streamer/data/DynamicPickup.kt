@@ -1,12 +1,10 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.`object`.Destroyable
 import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.streamer.Functions
-
-import java.util.ArrayList
-import java.util.HashSet
+import java.util.*
 
 /**
  * Created by valych on 11.01.2016 in project streamer-wrapper.
@@ -36,20 +34,16 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
         return !Functions.isValidDynamicPickup(this.id)
     }
 
-    internal companion object {
+    companion object {
 
         @JvmField
         val DEFAULT_STREAM_DISTANCE = 200f // Corresponds to STREAMER_PICKUP_SD in streamer.inc
 
         private var pickups = mutableListOf<DynamicPickup>()
 
-        @JvmStatic fun get(): Set<DynamicPickup> {
-            return HashSet(pickups)
-        }
+        @JvmStatic fun get(): Set<DynamicPickup> = HashSet(pickups)
 
-        @JvmStatic operator fun get(id: Int): DynamicPickup? {
-            return pickups.find { it.id == id }
-        }
+        @JvmStatic operator fun get(id: Int): DynamicPickup? = pickups.find { it.id == id }
 
         @JvmOverloads
         @JvmStatic

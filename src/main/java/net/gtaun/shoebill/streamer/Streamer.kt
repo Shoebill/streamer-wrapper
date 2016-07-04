@@ -12,13 +12,11 @@ import net.gtaun.shoebill.streamer.data.StreamerType
  */
 class Streamer : Plugin() {
 
-    internal companion object {
+    companion object {
         private var instance: Streamer? = null
 
         @JvmStatic
-        fun get(): Streamer {
-            return instance!!
-        }
+        fun get(): Streamer = instance!!
     }
 
     @Throws(Throwable::class)
