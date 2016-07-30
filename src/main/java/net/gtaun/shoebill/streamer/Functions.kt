@@ -373,8 +373,9 @@ object Functions {
         update!!.call(player.id, streamerType.value)
     }
 
-    @JvmOverloads fun updateEx(player: Player, x: Float, y: Float, z: Float, worldid: Int, interiorid: Int, streamerType: StreamerType = StreamerType.ALL) {
-        updateEx!!.call(player.id, x, y, z, worldid, interiorid, streamerType.value)
+    @JvmOverloads fun updateEx(player: Player, x: Float, y: Float, z: Float, worldid: Int, interiorid: Int,
+                               streamerType: StreamerType = StreamerType.ALL, compensatedTime: Int = -1) {
+        updateEx!!.call(player.id, x, y, z, worldid, interiorid, streamerType.value, compensatedTime)
     }
 
     //MapIcons:

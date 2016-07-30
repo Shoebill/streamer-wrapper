@@ -37,7 +37,10 @@ class Streamer : Plugin() {
         Functions.update(player, streamerType)
     }
 
-    @JvmOverloads fun updateEx(player: Player, location: Location, streamerType: StreamerType = StreamerType.ALL) {
-        Functions.updateEx(player, location.x, location.y, location.z, location.worldId, location.interiorId, streamerType)
+    @JvmOverloads fun updateEx(player: Player, location: Location, streamerType: StreamerType = StreamerType.ALL,
+                               compensatedTime: Int = -1) {
+        Functions.updateEx(player, location.x, location.y, location.z, location.worldId, location.interiorId,
+                streamerType, compensatedTime)
     }
+
 }
