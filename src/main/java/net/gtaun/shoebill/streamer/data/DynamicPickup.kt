@@ -68,11 +68,9 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
             val eventManager = Streamer.get().eventManager
 
             val pickup = Functions.createDynamicPickup(modelId, type, location, playerId, streamDistance, areaId, priority)
-            if (pickupHandler != null) {
-                pickup.pickupHandlerEntry = eventManager.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,
+            pickup.pickupHandlerEntry = eventManager.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,
                         HandlerPriority.NORMAL, Attentions.create().`object`(pickup), { pickup.pickupHandler?.handleEvent(it) })
-                pickup.pickupHandler = pickupHandler
-            }
+            pickup.pickupHandler = pickupHandler
             pickups.add(pickup)
             return pickup
         }
