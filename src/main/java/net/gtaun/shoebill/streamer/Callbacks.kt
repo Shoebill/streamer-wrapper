@@ -41,7 +41,7 @@ object Callbacks {
                 val modelid = amxCallEvent.parameters[2] as Int
                 val event = PlayerSelectDynamicObjectEvent(`object`, player, modelid,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
-                eventManager.dispatchEvent(event, player, `object`)
+                eventManager.dispatchEvent(event, player, `object`, modelid)
             }, "iiifff")
             hookCallback("OnPlayerShootDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
@@ -49,28 +49,28 @@ object Callbacks {
                 val dynamicObject = DynamicObject[amxCallEvent.parameters[2] as Int] ?: return@hookCallback
                 val event = PlayerShootDynamicObjectEvent(dynamicObject, player, weaponModel,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
-                eventManager.dispatchEvent(event, player, dynamicObject)
+                eventManager.dispatchEvent(event, player, dynamicObject, weaponModel)
             }, "iiifff")
 
             hookCallback("OnPlayerEnterDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
                 val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEnterDynamicAreaEvent(player, area)
-                eventManager.dispatchEvent(event)
+                eventManager.dispatchEvent(event, player, area)
             }, "ii")
 
             hookCallback("OnPlayerLeaveDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
                 val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerLeaveDynamicAreaEvent(player, area)
-                eventManager.dispatchEvent(event)
+                eventManager.dispatchEvent(event, player, area)
             }, "ii")
 
             hookCallback("OnPlayerPickUpDynamicPickup", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)
                 val pickup = DynamicPickup[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerPickUpDynamicPickupEvent(player, pickup)
-                eventManager.dispatchEvent(event)
+                eventManager.dispatchEvent(event, player, pickup)
             }, "ii")
         }
     }
