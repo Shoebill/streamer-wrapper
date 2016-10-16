@@ -13,14 +13,16 @@ import net.gtaun.util.event.HandlerPriority
 import java.util.*
 
 /**
- * Created by valych on 11.01.2016 in project streamer-wrapper.
+ * Created by valych & marvin on 11.01.2016 in project streamer-wrapper in project streamer-wrapper.
+ * Copyright (c) 2016 valych & Marvin Haschker. All rights reserved.
  */
 class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player?, val streamDistance: Float) : Destroyable {
 
     var id: Int = id
         private set
 
-    lateinit var pickupHandler: HandlerEntry
+    private var pickupHandlerEntry: HandlerEntry? = null
+    var pickupHandler: EventHandler<PlayerPickUpDynamicPickupEvent>? = null
 
     override fun destroy() {
         if (this.isDestroyed) {
@@ -30,7 +32,7 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
 
         Functions.destroyDynamicPickup(this.id)
         this.id = -1
-        pickupHandler.cancel()
+        pickupHandlerEntry?.cancel()
 
         removeSelf()
     }
@@ -57,16 +59,20 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
         @JvmOverloads
         @JvmStatic
         fun create(modelId: Int, type: Int, location: Location,
-                   streamDistance: Float = DynamicPickup.DEFAULT_STREAM_DISTANCE, priority: Int = 0,
-                   player: Player? = null, area: DynamicArea? = null, pickupHandler: EventHandler<PlayerPickUpDynamicPickupEvent>): DynamicPickup {
+                   streamDistance: Float = DynamicPickup.DEFAULT_STREAM_DISTANCE,
+                   pickupHandler: EventHandler<PlayerPickUpDynamicPickupEvent>? = null, priority: Int = 0,
+                   player: Player? = null, area: DynamicArea? = null): DynamicPickup {
 
             val playerId = if (player == null) -1 else player.id
             val areaId = if (area == null) -1 else area.id
             val eventManager = Streamer.get().eventManager
 
             val pickup = Functions.createDynamicPickup(modelId, type, location, playerId, streamDistance, areaId, priority)
-            pickup.pickupHandler = eventManager.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,
-                    HandlerPriority.NORMAL, Attentions.create().`object`(pickup), pickupHandler)
+            if (pickupHandler != null) {
+                pickup.pickupHandlerEntry = eventManager.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,
+                        HandlerPriority.NORMAL, Attentions.create().`object`(pickup), { pickup.pickupHandler?.handleEvent(it) })
+                pickup.pickupHandler = pickupHandler
+            }
             pickups.add(pickup)
             return pickup
         }
