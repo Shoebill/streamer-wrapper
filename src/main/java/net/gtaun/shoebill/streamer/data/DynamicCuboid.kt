@@ -5,7 +5,8 @@ import net.gtaun.shoebill.data.Area3D
 import net.gtaun.shoebill.streamer.Functions
 
 /**
- * Created by Valeriy on 18/4/2016.
+ * Created by Valeriy on 18/4/2016 in project streamer-wrapper.
+ * Copyright (c) 2016 Valeriy. All rights reserved.
  */
 class DynamicCuboid(id: Int, player: Player?) : DynamicArea(id, player) {
     companion object {

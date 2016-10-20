@@ -57,9 +57,11 @@ class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerI
 
         private var textLabels: MutableList<Dynamic3DTextLabel> = mutableListOf()
 
-        @JvmStatic fun get(): Set<Dynamic3DTextLabel> = HashSet(textLabels)
+        @JvmStatic
+        fun get(): Set<Dynamic3DTextLabel> = HashSet(textLabels)
 
-        @JvmStatic operator fun get(id: Int): Dynamic3DTextLabel? = textLabels.find { it.id == id }
+        @JvmStatic
+        operator fun get(id: Int): Dynamic3DTextLabel? = textLabels.find { it.id == id }
 
         @JvmStatic
         @JvmOverloads

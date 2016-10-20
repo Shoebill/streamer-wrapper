@@ -7,6 +7,15 @@ import net.gtaun.shoebill.constant.ObjectMaterialSize
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.Functions
+import net.gtaun.shoebill.streamer.Streamer
+import net.gtaun.shoebill.streamer.event.DynamicObjectMovedEvent
+import net.gtaun.shoebill.streamer.event.PlayerEditDynamicObjectEvent
+import net.gtaun.shoebill.streamer.event.PlayerSelectDynamicObjectEvent
+import net.gtaun.shoebill.streamer.event.PlayerShootDynamicObjectEvent
+import net.gtaun.util.event.Attentions
+import net.gtaun.util.event.EventHandler
+import net.gtaun.util.event.HandlerEntry
+import net.gtaun.util.event.HandlerPriority
 import java.util.*
 
 /**
@@ -15,6 +24,7 @@ import java.util.*
  */
 class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDistance: Float,
                     val drawDistance: Float) : Destroyable {
+
     var id: Int = id
         private set
 
@@ -26,94 +36,115 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
         get() = Functions.getDynamicObjectRot(this)
         set(newRot) = Functions.setDynamicObjectRot(this, newRot)
 
-    fun movePosition(newPos: Vector3D, speed: Float) {
-        val rotation = rotation
-        move(newPos, speed, rotation)
-    }
-
-    fun moveRotation(newRot: Vector3D, speed: Float) {
-        val position = position
-        move(position, speed, newRot)
-    }
-
-    fun move(pos: Vector3D, speed: Float, rot: Vector3D) {
-        Functions.moveDynamicObject(id, pos, speed, rot)
-    }
-
-    fun stop() {
-        Functions.stopDynamicObject(id)
-    }
-
     val isMoving: Boolean
         get() = Functions.isDynamicObjectMoving(id)
 
-    fun attachCamera(player: Player) {
-        Functions.attachCameraToDynamicObject(player.id, id)
-    }
+    fun movePosition(newPos: Vector3D, speed: Float) = move(newPos, speed, rotation)
 
-    @JvmOverloads fun attach(target: DynamicObject, offset: Vector3D, rotation: Vector3D, syncRotation: Boolean = true) {
-        Functions.attachDynamicObjectToObject(id, target.id, offset.x, offset.y, offset.z, rotation.x, rotation.y, rotation.z, syncRotation)
-    }
+    fun moveRotation(newRot: Vector3D, speed: Float) = move(position, speed, newRot)
 
-    fun attach(target: Player, offset: Vector3D, rotation: Vector3D) {
-        Functions.attachDynamicObjectToPlayer(id, target.id, offset.x, offset.y, offset.z, rotation.x, rotation.y, rotation.z)
-    }
+    fun move(pos: Vector3D, speed: Float, rot: Vector3D) = Functions.moveDynamicObject(id, pos, speed, rot)
 
-    fun attach(target: Vehicle, offset: Vector3D, rotation: Vector3D) {
-        Functions.attachDynamicObjectToVehicle(id, target.id, offset.x, offset.y, offset.z, rotation.x, rotation.y, rotation.z)
-    }
+    fun stop() = Functions.stopDynamicObject(id)
 
-    fun edit(player: Player) {
-        Functions.editDynamicObject(player.id, this.id)
-    }
+    fun attachCamera(player: Player) = Functions.attachCameraToDynamicObject(player.id, id)
 
-    fun isMaterialUsed(materialIndex: Int): Boolean {
-        return Functions.isDynamicObjectMaterialUsed(id, materialIndex)
-    }
+    @JvmOverloads
+    fun attach(target: DynamicObject, offset: Vector3D, rotation: Vector3D, syncRotation: Boolean = true) =
+            Functions.attachDynamicObjectToObject(id, target.id, offset.x, offset.y, offset.z, rotation.x,
+                    rotation.y, rotation.z, syncRotation)
 
-    fun getMaterial(materialindex: Int): DynamicObjectMaterial {
-        return Functions.getDynamicObjectMaterial(id, materialindex)
-    }
+    fun attach(target: Player, offset: Vector3D, rotation: Vector3D) =
+            Functions.attachDynamicObjectToPlayer(id, target.id, offset.x, offset.y, offset.z, rotation.x,
+                    rotation.y, rotation.z)
 
-    @JvmOverloads fun setMaterial(materialindex: Int, modelid: Int, txdname: String, textureName: String, materialColor: Int = 0) {
-        Functions.setDynamicObjectMaterial(id, materialindex, modelid, txdname, textureName, materialColor)
-    }
+    fun attach(target: Vehicle, offset: Vector3D, rotation: Vector3D) =
+            Functions.attachDynamicObjectToVehicle(id, target.id, offset.x, offset.y, offset.z, rotation.x,
+                    rotation.y, rotation.z)
 
-    fun isMaterialTextUsed(materialindex: Int): Boolean {
-        return Functions.isDynamicObjectMaterialTextUsed(id, materialindex)
-    }
+    fun edit(player: Player) = Functions.editDynamicObject(player.id, this.id)
 
-    fun getMaterialText(materialindex: Int): DynamicObjectMaterialText {
-        return Functions.getDynamicObjectMaterialText(id, materialindex)
-    }
+    fun isMaterialUsed(materialIndex: Int): Boolean =
+            Functions.isDynamicObjectMaterialUsed(id, materialIndex)
 
-    @JvmOverloads fun setMaterialText(materialIndex: Int, text: String,
-                                      size: ObjectMaterialSize = ObjectMaterialSize.SIZE_256x128,
-                                      fontFace: String = "Arial", fontSize: Int = 24,
-                                      bold: Boolean = true, fontColor: Int = 0xFFFFFFFF.toInt(),
-                                      backColor: Int = 0, textAlignment: Int = 0) {
-        Functions.setDynamicObjectMaterialText(id, materialIndex, text, size, fontFace, fontSize, bold,
-                fontColor, backColor, textAlignment)
-    }
+    fun getMaterial(materialindex: Int): DynamicObjectMaterial =
+            Functions.getDynamicObjectMaterial(id, materialindex)
+
+    @JvmOverloads
+    fun setMaterial(materialindex: Int, modelid: Int, txdname: String, textureName: String, materialColor: Int = 0) =
+            Functions.setDynamicObjectMaterial(id, materialindex, modelid, txdname, textureName, materialColor)
+
+    fun isMaterialTextUsed(materialindex: Int): Boolean =
+            Functions.isDynamicObjectMaterialTextUsed(id, materialindex)
+
+    fun getMaterialText(materialindex: Int): DynamicObjectMaterialText =
+            Functions.getDynamicObjectMaterialText(id, materialindex)
+
+    @JvmOverloads
+    fun setMaterialText(materialIndex: Int, text: String,
+                        size: ObjectMaterialSize = ObjectMaterialSize.SIZE_256x128,
+                        fontFace: String = "Arial", fontSize: Int = 24,
+                        bold: Boolean = true, fontColor: Int = 0xFFFFFFFF.toInt(),
+                        backColor: Int = 0, textAlignment: Int = 0) =
+            Functions.setDynamicObjectMaterialText(id, materialIndex, text, size, fontFace, fontSize, bold,
+                    fontColor, backColor, textAlignment)
 
     override fun destroy() {
-        if (isDestroyed) {
-            removeSelf()
+        if (isDestroyed)
             return
-        }
+
         Functions.destroyDynamicObject(this)
         id = -1
+        eventHandlers.forEach { it.cancel() }
+        eventHandlers.clear()
         removeSelf()
     }
 
-    private fun removeSelf() {
-        if (objects.contains(this))
-            objects.remove(this)
+    private fun removeSelf() = objects.remove(this)
+
+    override fun isDestroyed(): Boolean = !Functions.isValidDynamicObject(id)
+
+    private var eventHandlers: MutableList<HandlerEntry> = mutableListOf()
+
+    fun onObjectMoved(handler: (DynamicObjectMovedEvent) -> Unit): HandlerEntry =
+            onObjectMoved(EventHandler { handler(it) })
+
+    fun onObjectMoved(handler: EventHandler<DynamicObjectMovedEvent>): HandlerEntry {
+        val entry = eventManagerNode.registerHandler(DynamicObjectMovedEvent::class.java, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this), handler)
+        eventHandlers.add(entry)
+        return entry
     }
 
-    override fun isDestroyed(): Boolean {
-        return !Functions.isValidDynamicObject(id)
+    fun onPlayerEditObject(handler: (PlayerEditDynamicObjectEvent) -> Unit): HandlerEntry =
+            onPlayerEditObject(EventHandler { handler(it) })
+
+    fun onPlayerEditObject(handler: EventHandler<PlayerEditDynamicObjectEvent>): HandlerEntry {
+        val entry = eventManagerNode.registerHandler(PlayerEditDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this), handler)
+        eventHandlers.add(entry)
+        return entry
     }
+
+    fun onPlayerSelectObject(handler: EventHandler<PlayerSelectDynamicObjectEvent>): HandlerEntry {
+        val entry = eventManagerNode.registerHandler(PlayerSelectDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this), handler)
+        eventHandlers.add(entry)
+        return entry
+    }
+
+    fun onPlayerSelectObject(handler: (PlayerSelectDynamicObjectEvent) -> Unit): HandlerEntry =
+            onPlayerSelectObject(EventHandler { handler(it) })
+
+    fun onPlayerShootObject(handler: EventHandler<PlayerShootDynamicObjectEvent>): HandlerEntry {
+        val entry = eventManagerNode.registerHandler(PlayerShootDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this), handler)
+        eventHandlers.add(entry)
+        return entry
+    }
+
+    fun onPlayerShootObject(handler: (PlayerShootDynamicObjectEvent) -> Unit): HandlerEntry =
+            onPlayerShootObject(EventHandler { handler(it) })
 
     companion object {
 
@@ -121,6 +152,7 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
         @JvmField val DEFAULT_DRAW_DISTANCE = 0f // Corresponds to STREAMER_OBJECT_DD in streamer.inc
 
         private var objects = mutableListOf<DynamicObject>()
+        private val eventManagerNode = Streamer.get().eventManager
 
         @JvmStatic
         fun get(): Set<DynamicObject> = HashSet(objects)
@@ -139,6 +171,9 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
 
             val `object` = Functions.createDynamicObject(modelid, location, rotation, streamDistance, drawDistance,
                     playerId, areaId, priority)
+
+
+
             objects.add(`object`)
             return `object`
         }

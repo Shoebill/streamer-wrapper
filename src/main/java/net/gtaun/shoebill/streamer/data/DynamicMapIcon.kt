@@ -19,24 +19,17 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
         private set
 
     override fun destroy() {
-        if (isDestroyed) {
-            removeSelf()
+        if (isDestroyed)
             return
-        }
 
         Functions.destroyDynamicMapIcon(this)
         id = -1
         removeSelf()
     }
 
-    override fun isDestroyed(): Boolean {
-        return id == -1
-    }
+    override fun isDestroyed(): Boolean = id == -1
 
-    private fun removeSelf() {
-        if (objects.contains(this))
-            objects.remove(this)
-    }
+    private fun removeSelf() = objects.remove(this)
 
     companion object {
 
@@ -53,7 +46,8 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
         @JvmOverloads
         @JvmStatic
         fun create(location: Location, type: Int, color: Color, streamDistance: Float = DEFAULT_STREAM_DISTANCE,
-                   style: MapIconStyle = DEFAULT_ICON_STYLE, priority: Int = 0, player: Player? = null, area: DynamicArea? = null): DynamicMapIcon {
+                   style: MapIconStyle = DEFAULT_ICON_STYLE, priority: Int = 0, player: Player? = null,
+                   area: DynamicArea? = null): DynamicMapIcon {
             val playerId = if (player == null) -1 else player.id
 
             val `object` = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
