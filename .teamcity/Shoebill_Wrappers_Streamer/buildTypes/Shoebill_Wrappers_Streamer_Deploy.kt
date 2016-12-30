@@ -12,7 +12,7 @@ object Shoebill_Wrappers_Streamer_Deploy : BuildType({
     uuid = "302c820d-f614-47a1-804e-a8aa322f3e5d"
     extId = "Shoebill_Wrappers_Streamer_Deploy"
     name = "Deploy"
-    description = "Builds, Tests and Deploys the project."
+    description = "Builds, tests and deploys the project."
 
     artifactRules = "target/*.jar"
 
@@ -35,7 +35,7 @@ object Shoebill_Wrappers_Streamer_Deploy : BuildType({
     triggers {
         vcs {
             branchFilter = """+:refs/heads/master
-+:master"""
+                              +:master"""
         }
     }
 })

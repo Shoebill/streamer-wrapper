@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <name>Shoebill_Wrappers_Streamer Config DSL Script</name>
   <properties>
-    <kotlin.version>1.0.3</kotlin.version>
+    <kotlin.version>1.0.6</kotlin.version>
     <teamcity.dsl.version>10.0.2</teamcity.dsl.version>
   </properties>
   <groupId>Shoebill_Wrappers_Streamer</groupId>
@@ -20,7 +20,7 @@
     </repository>
     <repository>
       <id>teamcity-server</id>
-      <url>http://37.114.61.174:8111/app/dsl-plugins-repository</url>
+      <url>http://ci.gtaun.net/app/dsl-plugins-repository</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -35,7 +35,6 @@
   </pluginRepositories>
 
   <build>
-    <sourceDirectory>.</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>kotlin-maven-plugin</artifactId>
@@ -46,16 +45,18 @@
         <executions>
           <execution>
             <id>compile</id>
-            <phase>process-sources</phase>
+            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
+              <goal>js</goal>
             </goals>
           </execution>
           <execution>
             <id>test-compile</id>
-            <phase>process-test-sources</phase>
+            <phase>test-compile</phase>
             <goals>
               <goal>test-compile</goal>
+              <goal>test-js</goal>
             </goals>
           </execution>
         </executions>
@@ -91,6 +92,12 @@
       <artifactId>kotlin-stdlib</artifactId>
       <version>${kotlin.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
