@@ -6,6 +6,7 @@ import net.gtaun.shoebill.`object`.Vehicle
 import net.gtaun.shoebill.constant.ObjectMaterialSize
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.data.Vector3D
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
 import net.gtaun.shoebill.streamer.event.DynamicObjectMovedEvent
@@ -18,14 +19,15 @@ import net.gtaun.util.event.HandlerEntry
 import net.gtaun.util.event.HandlerPriority
 import java.util.*
 
+
 /**
- * Created by marvin on 23.07.15 in project streamer-wrapper.
- * Copyright (c) 2015 Marvin Haschker. All rights reserved.
+ * @author Marvin Haschker
  */
+@AllOpen
 class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDistance: Float,
                     val drawDistance: Float) : Destroyable {
 
-    var id: Int = id
+    final var id: Int = id
         private set
 
     var position: Vector3D
@@ -71,8 +73,8 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             Functions.getDynamicObjectMaterial(id, materialindex)
 
     @JvmOverloads
-    fun setMaterial(materialindex: Int, modelid: Int, txdname: String, textureName: String, materialColor: Int = 0) =
-            Functions.setDynamicObjectMaterial(id, materialindex, modelid, txdname, textureName, materialColor)
+    fun setMaterial(materialIndex: Int, modelid: Int, txdname: String, textureName: String, materialColor: Int = 0) =
+            Functions.setDynamicObjectMaterial(id, materialIndex, modelid, txdname, textureName, materialColor)
 
     fun isMaterialTextUsed(materialindex: Int): Boolean =
             Functions.isDynamicObjectMaterialTextUsed(id, materialindex)
@@ -162,14 +164,14 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
 
         @JvmOverloads
         @JvmStatic
-        fun create(modelid: Int, location: Location, rotation: Vector3D = Vector3D(0f, 0f, 0f),
+        fun create(modelId: Int, location: Location, rotation: Vector3D = Vector3D(0f, 0f, 0f),
                    streamDistance: Float = DynamicObject.DEFAULT_STREAM_DISTANCE,
                    drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE,
                    priority: Int = 0, player: Player? = null, area: DynamicArea? = null): DynamicObject {
-            val playerId = if (player == null) -1 else player.id
-            val areaId = if (area == null) -1 else area.id
+            val playerId = player?.id ?: -1
+            val areaId = area?.id ?: -1
 
-            val `object` = Functions.createDynamicObject(modelid, location, rotation, streamDistance, drawDistance,
+            val `object` = Functions.createDynamicObject(modelId, location, rotation, streamDistance, drawDistance,
                     playerId, areaId, priority)
 
 

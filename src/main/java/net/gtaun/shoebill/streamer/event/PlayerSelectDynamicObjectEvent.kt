@@ -2,11 +2,13 @@ package net.gtaun.shoebill.streamer.event
 
 import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.`object`.PlayerRelated
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.data.DynamicObject
 
 /**
- * Created by marvin on 23.07.15 in project streamer-wrapper.
- * Copyright (c) 2015 Marvin Haschker. All rights reserved.
+ * @author Marvin Haschker
  */
-class PlayerSelectDynamicObjectEvent(`object`: DynamicObject, val player: Player, val modelid: Int, val pos: Vector3D)
-        : DynamicObjectEvent(`object`)
+@AllOpen
+class PlayerSelectDynamicObjectEvent(obj: DynamicObject, val player: Player,
+                                     val modelid: Int, val pos: Vector3D) : DynamicObjectEvent(obj)

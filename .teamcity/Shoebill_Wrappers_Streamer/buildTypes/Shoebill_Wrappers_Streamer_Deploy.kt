@@ -1,5 +1,3 @@
-package Shoebill_Wrappers_Streamer.buildTypes
-
 import jetbrains.buildServer.configs.kotlin.v10.*
 import jetbrains.buildServer.configs.kotlin.v10.buildSteps.MavenBuildStep
 import jetbrains.buildServer.configs.kotlin.v10.buildSteps.MavenBuildStep.*

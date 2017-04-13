@@ -3,6 +3,7 @@ package net.gtaun.shoebill.streamer.data
 import net.gtaun.shoebill.`object`.Destroyable
 import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.data.Location
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
 import net.gtaun.shoebill.streamer.event.PlayerPickUpDynamicPickupEvent
@@ -12,14 +13,16 @@ import net.gtaun.util.event.HandlerEntry
 import net.gtaun.util.event.HandlerPriority
 import java.util.*
 
+
 /**
- * Created by valych & marvin on 11.01.2016 in project streamer-wrapper in project streamer-wrapper.
- * Copyright (c) 2016 valych & Marvin Haschker. All rights reserved.
+ * @author valych
+ * @author Marvin Haschker
  */
+@AllOpen
 class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player?, val streamDistance: Float) :
         Destroyable {
 
-    var id: Int = id
+    final var id: Int = id
         private set
 
     private var pickupHandlers: MutableList<HandlerEntry> = mutableListOf()
@@ -72,8 +75,8 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
                    player: Player? = null, area: DynamicArea? = null,
                    pickupHandler: EventHandler<PlayerPickUpDynamicPickupEvent>? = null): DynamicPickup {
 
-            val playerId = if (player == null) -1 else player.id
-            val areaId = if (area == null) -1 else area.id
+            val playerId = player?.id ?: -1
+            val areaId = area?.id ?: -1
 
             val pickup = Functions.createDynamicPickup(modelId, type, location, playerId,
                     streamDistance, areaId, priority)

@@ -1,5 +1,3 @@
-@file:JvmName("Functions")
-
 package net.gtaun.shoebill.streamer
 
 import net.gtaun.shoebill.`object`.Player
@@ -18,8 +16,7 @@ import net.gtaun.util.event.EventManager
 import net.gtaun.util.event.EventManagerNode
 
 /**
- * Created by marvin on 23.07.15 in project streamer-wrapper.
- * Copyright (c) 2015 Marvin Haschker. All rights reserved.
+ * @author Marvin Haschker
  */
 object Functions {
 
@@ -385,7 +382,7 @@ object Functions {
                              streamDistance: Float = 200f,
                              style: MapIconStyle = MapIconStyle.LOCAL, area: DynamicArea? = null,
                              priority: Int = 0): DynamicMapIcon {
-        val areaId = if (area == null) -1 else area.id
+        val areaId = area?.id ?: -1
 
         val id = createDynamicMapIcon!!.call(location.x, location.y, location.z, type,
                 color.value, location.worldId, location.interiorId, playerId, streamDistance, style.value, areaId, priority) as Int

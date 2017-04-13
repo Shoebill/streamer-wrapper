@@ -4,6 +4,7 @@ import net.gtaun.shoebill.`object`.Destroyable
 import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.`object`.Vehicle
 import net.gtaun.shoebill.data.Vector3D
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
 import net.gtaun.shoebill.streamer.event.PlayerEnterDynamicAreaEvent
@@ -18,9 +19,10 @@ import java.util.*
  * Created by Valeriy on 18/4/2016 in project streamer-wrapper.
  * Copyright (c) 2016 Valeriy. All rights reserved.
  */
+@AllOpen
 abstract class DynamicArea internal constructor(id: Int, val player: Player?) : Destroyable {
 
-    var id: Int = id
+    final var id: Int = id
         get
         private set
 

@@ -5,10 +5,8 @@ import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.resource.Plugin
 import net.gtaun.shoebill.streamer.data.StreamerType
 
-
 /**
- * Created by marvin on 23.07.15 in project streamer-wrapper.
- * Copyright (c) 2015 Marvin Haschker. All rights reserved.
+ * @author Marvin Haschker
  */
 class Streamer : Plugin() {
 

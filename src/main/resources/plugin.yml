@@ -1,6 +1,6 @@
 class: net.gtaun.shoebill.streamer.Streamer
 name: Incognito's Streamer Wrapper Plugin
-version: 1.1-SNAPSHOT
-buildNumber: 0
-buildDate: Unknown
-authors: 123marvin123, valych
+version: ${system.MAVEN_VERSION}
+buildNumber: ${env.BUILD_NUMBER}
+buildDate: ${env.BUILD_START_DATE}
+authors: Marvin Haschker, valych

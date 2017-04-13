@@ -1,5 +1,3 @@
-@file:JvmName("Dynamic3DTextLabel")
-
 package net.gtaun.shoebill.streamer.data
 
 import net.gtaun.shoebill.`object`.Destroyable
@@ -7,21 +5,23 @@ import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.`object`.Vehicle
 import net.gtaun.shoebill.data.Color
 import net.gtaun.shoebill.data.Location
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import java.util.*
 
 /**
- * Created by valych and marvin on 11.01.2016 in project streamer-wrapper.
- *
+ * @author valych
+ * @author Marvin Haschker
  */
+@AllOpen
 class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerId: Int, var color: Color,
                                               val streamDistance: Float, val drawDistance: Float) : Destroyable {
 
-    var id: Int = id
+    final var id: Int = id
         private set
         get
 
-    var text: String
+    final var text: String
         get() = Functions.getDynamic3DTextLabelText(this.id)
         set(newValue) = Functions.updateDynamic3DTextLabelText(id, color, newValue)
 
@@ -70,10 +70,10 @@ class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerI
                    attachedVehicle: Vehicle? = null, player: Player? = null,
                    area: DynamicArea? = null): Dynamic3DTextLabel {
 
-            val attachedVehicleId = if (attachedVehicle == null) 0xFFFF else attachedVehicle.id
-            val attachedPlayerId = if (attachedPlayer == null) 0xFFFF else attachedPlayer.id
-            val playerId = if (player == null) 0xFFFF else player.id
-            val areaId = if (area == null) -1 else area.id
+            val attachedVehicleId = attachedVehicle?.id ?: 0xFFFF
+            val attachedPlayerId = attachedPlayer?.id ?: 0xFFFF
+            val playerId = player?.id ?: 0xFFFF
+            val areaId = area?.id ?: -1
 
             val textLabel = Functions.createDynamic3DTextLabel(text, color, location, drawDistance, attachedPlayerId,
                     attachedVehicleId, testLOS, playerId, streamDistance, areaId, priority)

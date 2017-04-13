@@ -5,6 +5,7 @@ import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.constant.MapIconStyle
 import net.gtaun.shoebill.data.Color
 import net.gtaun.shoebill.data.Location
+import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import java.util.*
 
@@ -12,10 +13,11 @@ import java.util.*
  * Created by marvin on 19.02.16.
  * Copyright (c) 2015 Marvin Haschker. All rights reserved.
  */
+@AllOpen
 class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: Color, val player: Player?,
                      val streamDistance: Float, val style: MapIconStyle) : Destroyable {
 
-    var id: Int = id
+    final var id: Int = id
         private set
 
     override fun destroy() {
@@ -48,7 +50,7 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
         fun create(location: Location, type: Int, color: Color, streamDistance: Float = DEFAULT_STREAM_DISTANCE,
                    style: MapIconStyle = DEFAULT_ICON_STYLE, priority: Int = 0, player: Player? = null,
                    area: DynamicArea? = null): DynamicMapIcon {
-            val playerId = if (player == null) -1 else player.id
+            val playerId = player?.id ?: -1
 
             val `object` = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
                     priority)
