@@ -35,8 +35,10 @@ abstract class DynamicArea internal constructor(id: Int, val player: Player?) : 
     fun attachToPlayer(player: Player, offset: Vector3D) =
             Functions.attachDynamicAreaToPlayer(this, player, offset)
 
-    fun attachToObject(`object`: DynamicObject, offset: Vector3D) =
-            Functions.attachDynamicAreaToObject(this, `object`, offset)
+    @JvmOverloads
+    fun attachToObject(obj: DynamicObject, objectType: StreamerObjectType = StreamerObjectType.DYNAMIC,
+                       forPlayer: Player ? = null, offset: Vector3D) =
+            Functions.attachDynamicAreaToObject(this, obj, objectType, forPlayer?.id ?: 0xFFFF, offset)
 
     fun attachToVehicle(vehicle: Vehicle, offset: Vector3D) =
             Functions.attachDynamicAreaToVehicle(this, vehicle, offset)

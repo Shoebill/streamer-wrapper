@@ -11,16 +11,15 @@ import net.gtaun.shoebill.streamer.data.StreamerType
 class Streamer : Plugin() {
 
     companion object {
-        private var instance: Streamer? = null
+        lateinit private var instance: Streamer
 
         @JvmStatic
-        fun get(): Streamer = instance!!
+        fun get() = instance
     }
 
     @Throws(Throwable::class)
     override fun onEnable() {
         instance = this
-        val eventManager = eventManager
         Functions.registerHandlers(eventManager)
         Callbacks.registerHandlers(eventManager)
     }
@@ -31,14 +30,14 @@ class Streamer : Plugin() {
         Callbacks.unregisterHandlers()
     }
 
-    @JvmOverloads fun update(player: Player, streamerType: StreamerType = StreamerType.ALL) {
-        Functions.update(player, streamerType)
-    }
+    @JvmOverloads
+    fun update(player: Player, streamerType: StreamerType = StreamerType.ALL) =
+            Functions.update(player, streamerType)
 
-    @JvmOverloads fun updateEx(player: Player, location: Location, streamerType: StreamerType = StreamerType.ALL,
-                               compensatedTime: Int = -1) {
-        Functions.updateEx(player, location.x, location.y, location.z, location.worldId, location.interiorId,
-                streamerType, compensatedTime)
-    }
+    @JvmOverloads
+    fun updateEx(player: Player, location: Location, streamerType: StreamerType = StreamerType.ALL,
+                               compensatedTime: Int = -1) =
+            Functions.updateEx(player, location.x, location.y, location.z, location.worldId, location.interiorId,
+                    streamerType, compensatedTime)
 
 }

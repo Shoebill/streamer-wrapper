@@ -14,7 +14,7 @@ import java.util.*
  * @author Marvin Haschker
  */
 @AllOpen
-class Dynamic3DTextLabel internal constructor(id: Int, text: String, val playerId: Int, var color: Color,
+class Dynamic3DTextLabel internal constructor(id: Int, text: String, val player: Player?, var color: Color,
                                               val streamDistance: Float, val drawDistance: Float) : Destroyable {
 
     final var id: Int = id

@@ -20,289 +20,231 @@ import net.gtaun.util.event.EventManagerNode
  */
 object Functions {
 
-    private var eventManagerNode: EventManagerNode? = null
+    private lateinit var eventManagerNode: EventManagerNode
+    private val logger = Streamer.get().logger
 
-    //Objects:
-    private var createDynamicObject: AmxCallable? = null
-    private var destroyDynamicObject: AmxCallable? = null
-    private var isValidDynamicObject: AmxCallable? = null
-    private var setDynamicObjectPos: AmxCallable? = null
-    private var getDynamicObjectPos: AmxCallable? = null
-    private var setDynamicObjectRot: AmxCallable? = null
-    private var getDynamicObjectRot: AmxCallable? = null
-    private var moveDynamicObject: AmxCallable? = null
-    private var stopDynamicObject: AmxCallable? = null
-    private var isDynamicObjectMoving: AmxCallable? = null
-    private var attachCameraToDynamicObject: AmxCallable? = null
-    private var attachDynamicObjectToObject: AmxCallable? = null
-    private var attachDynamicObjectToPlayer: AmxCallable? = null
-    private var attachDynamicObjectToVehicle: AmxCallable? = null
-    private var editDynamicObject: AmxCallable? = null
-    private var isDynamicObjectMaterialUsed: AmxCallable? = null
-    private var getDynamicObjectMaterial: AmxCallable? = null
-    private var setDynamicObjectMaterial: AmxCallable? = null
-    private var isDynamicObjectMaterialTextUsed: AmxCallable? = null
-    private var getDynamicObjectMaterialText: AmxCallable? = null
-    private var setDynamicObjectMaterialText: AmxCallable? = null
+    private val FUNCTION_LIST = arrayOf(
+            "CreateDynamicObject",
+            "DestroyDynamicObject",
+            "IsValidDynamicObject",
+            "SetDynamicObjectPos",
+            "GetDynamicObjectPos",
+            "SetDynamicObjectRot",
+            "GetDynamicObjectRot",
+            "MoveDynamicObject",
+            "StopDynamicObject",
+            "IsDynamicObjectMoving",
+            "AttachCameraToDynamicObject",
+            "AttachDynamicObjectToObject",
+            "AttachDynamicObjectToPlayer",
+            "AttachDynamicObjectToVehicle",
+            "EditDynamicObject",
+            "IsDynamicObjectMaterialUsed",
+            "GetDynamicObjectMaterial",
+            "SetDynamicObjectMaterial",
+            "IsDynamicObjectMaterialTextUsed",
+            "GetDynamicObjectMaterialText",
+            "SetDynamicObjectMaterialText",
+            "CreateDynamicPickup",
+            "DestroyDynamicPickup",
+            "IsValidDynamicPickup",
+            "CreateDynamic3DTextLabel",
+            "DestroyDynamic3DTextLabel",
+            "IsValidDynamic3DTextLabel",
+            "GetDynamic3DTextLabelText",
+            "UpdateDynamic3DTextLabelText",
+            "CreateDynamicMapIcon",
+            "DestroyDynamicMapIcon",
+            "IsValidDynamicMapIcon",
+            "CreateDynamicCircle",
+            "CreateDynamicSphere",
+            "CreateDynamicRectangle",
+            "CreateDynamicCuboid",
+            "DestroyDynamicArea",
+            "IsValidDynamicArea",
+            "IsPlayerInDynamicArea",
+            "IsPlayerInAnyDynamicArea",
+            "IsAnyPlayerInDynamicArea",
+            "IsAnyPlayerInAnyDynamicArea",
+            "IsPointInDynamicArea",
+            "IsPointInAnyDynamicArea",
+            "AttachDynamicAreaToObject",
+            "AttachDynamicAreaToPlayer",
+            "AttachDynamicAreaToVehicle",
+            "Streamer_Update",
+            "Streamer_UpdateEx")
 
-    //Pickups:
-    private var createDynamicPickup: AmxCallable? = null
-    private var destroyDynamicPickup: AmxCallable? = null
-    private var isValidDynamicPickup: AmxCallable? = null
-
-    //3DTextLabels:
-    private var createDynamic3DTextLabel: AmxCallable? = null
-    private var destroyDynamic3DTextLabel: AmxCallable? = null
-    private var isValidDynamic3DTextLabel: AmxCallable? = null
-    private var getDynamic3DTextLabelText: AmxCallable? = null
-    private var updateDynamic3DTextLabelText: AmxCallable? = null
-
-    //Mapicons:
-    private var createDynamicMapIcon: AmxCallable? = null
-    private var destroyDynamicMapIcon: AmxCallable? = null
-    private var isValidDynamicMapIcon: AmxCallable? = null
-
-    //Areas:
-    private var createDynamicCircle: AmxCallable? = null
-    private var createDynamicSphere: AmxCallable? = null
-    private var createDynamicRectangle: AmxCallable? = null
-    private var createDynamicCuboid: AmxCallable? = null
-    private var destroyDynamicArea: AmxCallable? = null
-    private var isValidDynamicArea: AmxCallable? = null
-    private var isPlayerInDynamicArea: AmxCallable? = null
-    private var isPlayerInAnyDynamicArea: AmxCallable? = null
-    private var isAnyPlayerInDynamicArea: AmxCallable? = null
-    private var isAnyPlayerInAnyDynamicArea: AmxCallable? = null
-    private var isPointInDynamicArea: AmxCallable? = null
-    private var isPointInAnyDynamicArea: AmxCallable? = null
-    private var attachDynamicAreaToObject: AmxCallable? = null
-    private var attachDynamicAreaToPlayer: AmxCallable? = null
-    private var attachDynamicAreaToVehicle: AmxCallable? = null
-
-    //Streamer:
-    private var update: AmxCallable? = null
-    private var updateEx: AmxCallable? = null
+    private var functions: MutableMap<String, AmxCallable> = mutableMapOf()
 
     fun registerHandlers(eventManager: EventManager) {
         eventManagerNode = eventManager.createChildNode()
         val amxInstance = AmxInstance.getDefault()
-        findObjectFunctions(amxInstance)
-        findPickupFunctions(amxInstance)
-        find3DTextLabelFunctions(amxInstance)
-        findStreamerFunctions(amxInstance)
-        findAreaFunctions(amxInstance)
+        var errors = 0
+        FUNCTION_LIST.forEach { functionName ->
+            val native = amxInstance.getNative(functionName)
+            if(native != null) {
+                functions[functionName] = native
+            } else {
+                errors += 1
+                logger.error("Could not find native function $functionName.")
+            }
+        }
+        if(errors > 0) {
+            logger.error("$errors native function(s) have not been found. Please make sure that the native streamer" +
+                    "plugin will be loaded before Shoebill (check server.cfg).")
+        }
     }
 
     fun unregisterHandlers() {
-        eventManagerNode!!.cancelAll()
-        eventManagerNode!!.destroy()
-        eventManagerNode = null
+        eventManagerNode.cancelAll()
+        eventManagerNode.destroy()
     }
 
-    private fun findObjectFunctions(instance: AmxInstance) {
-        val tickFunc = instance.getNative("Streamer_GetTickRate")
-        if (tickFunc != null && createDynamicObject == null) {
-            createDynamicObject = instance.getNative("CreateDynamicObject")
-            destroyDynamicObject = instance.getNative("DestroyDynamicObject")
-            isValidDynamicObject = instance.getNative("IsValidDynamicObject")
-            setDynamicObjectPos = instance.getNative("SetDynamicObjectPos")
-            getDynamicObjectPos = instance.getNative("GetDynamicObjectPos")
-            setDynamicObjectRot = instance.getNative("SetDynamicObjectRot")
-            getDynamicObjectRot = instance.getNative("GetDynamicObjectRot")
-            moveDynamicObject = instance.getNative("MoveDynamicObject")
-            stopDynamicObject = instance.getNative("StopDynamicObject")
-            isDynamicObjectMoving = instance.getNative("IsDynamicObjectMoving")
-            attachCameraToDynamicObject = instance.getNative("AttachCameraToDynamicObject")
-            attachDynamicObjectToObject = instance.getNative("AttachDynamicObjectToObject")
-            attachDynamicObjectToPlayer = instance.getNative("AttachDynamicObjectToPlayer")
-            attachDynamicObjectToVehicle = instance.getNative("AttachDynamicObjectToVehicle")
-            editDynamicObject = instance.getNative("EditDynamicObject")
-            isDynamicObjectMaterialUsed = instance.getNative("IsDynamicObjectMaterialUsed")
-            getDynamicObjectMaterial = instance.getNative("GetDynamicObjectMaterial")
-            setDynamicObjectMaterial = instance.getNative("SetDynamicObjectMaterial")
-            isDynamicObjectMaterialTextUsed = instance.getNative("IsDynamicObjectMaterialTextUsed")
-            getDynamicObjectMaterialText = instance.getNative("GetDynamicObjectMaterialText")
-            setDynamicObjectMaterialText = instance.getNative("SetDynamicObjectMaterialText")
-            createDynamicMapIcon = instance.getNative("CreateDynamicMapIcon")
-            destroyDynamicMapIcon = instance.getNative("DestroyDynamicMapIcon")
-            isValidDynamicMapIcon = instance.getNative("IsValidDynamicMapIcon")
-        } else {
-            Streamer.get().logger.error("Could not find Streamer functions! Are you sure that the streamer is loading " +
-                    "before Shoebill (check server.cfg plugins order)?")
-        }
+    @JvmOverloads
+    fun createDynamicObject(modelId: Int, location: Location, rotation: Vector3D,
+                            streamDistance: Float = DynamicObject.DEFAULT_STREAM_DISTANCE,
+                            drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE, playerId: Int = -1,
+                            area: Int = -1, priority: Int = 0): DynamicObject {
+
+        val native = getNative("CreateDynamicObject")
+
+        val id = native.call(modelId, location.x, location.y, location.z, rotation.x, rotation.y, rotation.z,
+                        location.worldId, location.interiorId, playerId, streamDistance, drawDistance,
+                area, priority) as Int
+
+        return DynamicObject(id, modelId, playerId, streamDistance, drawDistance)
     }
 
-    private fun findPickupFunctions(instance: AmxInstance) {
-        if (createDynamicPickup == null) {
-            createDynamicPickup = instance.getNative("CreateDynamicPickup")
-            destroyDynamicPickup = instance.getNative("DestroyDynamicPickup")
-            isValidDynamicPickup = instance.getNative("IsValidDynamicPickup")
-        }
-    }
-
-    private fun find3DTextLabelFunctions(instance: AmxInstance) {
-        if (createDynamic3DTextLabel == null) {
-            createDynamic3DTextLabel = instance.getNative("CreateDynamic3DTextLabel")
-            destroyDynamic3DTextLabel = instance.getNative("DestroyDynamic3DTextLabel")
-            isValidDynamic3DTextLabel = instance.getNative("IsValidDynamic3DTextLabel")
-            getDynamic3DTextLabelText = instance.getNative("GetDynamic3DTextLabelText")
-            updateDynamic3DTextLabelText = instance.getNative("UpdateDynamic3DTextLabelText")
-        }
-    }
-
-    private fun findAreaFunctions(instance: AmxInstance) {
-        if (createDynamicCircle == null) {
-            createDynamicCircle = instance.getNative("CreateDynamicCircle")
-            createDynamicSphere = instance.getNative("CreateDynamicSphere")
-            createDynamicRectangle = instance.getNative("CreateDynamicRectangle")
-            createDynamicCuboid = instance.getNative("CreateDynamicCuboid")
-            destroyDynamicArea = instance.getNative("DestroyDynamicArea")
-            isValidDynamicArea = instance.getNative("IsValidDynamicArea")
-            isPlayerInDynamicArea = instance.getNative("IsPlayerInDynamicArea")
-            isPlayerInAnyDynamicArea = instance.getNative("IsPlayerInAnyDynamicArea")
-            isAnyPlayerInDynamicArea = instance.getNative("IsAnyPlayerInDynamicArea")
-            isAnyPlayerInAnyDynamicArea = instance.getNative("IsAnyPlayerInAnyDynamicArea")
-            isPointInDynamicArea = instance.getNative("IsPointInDynamicArea")
-            isPointInAnyDynamicArea = instance.getNative("isPointInAnyDynamicArea")
-            attachDynamicAreaToObject = instance.getNative("AttachDynamicAreaToObject")
-            attachDynamicAreaToPlayer = instance.getNative("AttachDynamicAreaToPlayer")
-            attachDynamicAreaToVehicle = instance.getNative("AttachDynamicAreaToVehicle")
-        }
-    }
-
-    private fun findStreamerFunctions(instance: AmxInstance) {
-        update = instance.getNative("Streamer_Update")
-        updateEx = instance.getNative("Streamer_UpdateEx")
-    }
-
-    @JvmOverloads fun createDynamicObject(modelid: Int, location: Location, rotation: Vector3D,
-                                          streamDistance: Float = DynamicObject.DEFAULT_STREAM_DISTANCE,
-                                          drawDistance: Float = DynamicObject.DEFAULT_DRAW_DISTANCE, playerId: Int = -1,
-                                          area: Int = -1, priority: Int = 0): DynamicObject {
-        val id = createDynamicObject!!
-                .call(modelid, location.x, location.y, location.z, rotation.x, rotation.y, rotation.z,
-                        location.worldId, location.interiorId, playerId, streamDistance, drawDistance, area, priority) as Int
-        return DynamicObject(id, modelid, playerId, streamDistance, drawDistance)
-    }
-
-    fun destroyDynamicObject(`object`: DynamicObject) {
-        destroyDynamicObject(`object`.id)
-    }
+    fun destroyDynamicObject(obj: DynamicObject) = destroyDynamicObject(obj.id)
 
     fun destroyDynamicObject(id: Int) {
-        destroyDynamicObject!!.call(id)
+        val native = getNative("DestroyDynamicObject")
+        native.call(id)
     }
 
-    fun isValidDynamicObject(`object`: DynamicObject): Boolean {
-        return isValidDynamicObject(`object`.id)
-    }
+    fun isValidDynamicObject(obj: DynamicObject) = isValidDynamicObject(obj.id)
 
     fun isValidDynamicObject(id: Int): Boolean {
-        return isValidDynamicObject!!.call(id) as Int > 0
+        val native = getNative("IsValidDynamicObject")
+        return native.call(id) as Int > 0
     }
 
-    fun setDynamicObjectPos(`object`: DynamicObject, pos: Vector3D) {
-        setDynamicObjectPos(`object`.id, pos)
-    }
+    fun setDynamicObjectPos(obj: DynamicObject, pos: Vector3D) = setDynamicObjectPos(obj.id, pos)
 
-    fun setDynamicObjectPos(id: Int, pos: Vector3D) {
-        setDynamicObjectPos(id, pos.x, pos.y, pos.z)
-    }
+    fun setDynamicObjectPos(id: Int, pos: Vector3D) = setDynamicObjectPos(id, pos.x, pos.y, pos.z)
 
     fun setDynamicObjectPos(id: Int, x: Float, y: Float, z: Float) {
-        setDynamicObjectPos!!.call(id, x, y, z)
+        val native = getNative("SetDynamicObjectPos")
+        native.call(id, x, y, z)
     }
 
-    fun getDynamicObjectPos(`object`: DynamicObject): Vector3D {
-        return getDynamicObjectPos(`object`.id)
-    }
+    fun getDynamicObjectPos(obj: DynamicObject) = getDynamicObjectPos(obj.id)
 
     fun getDynamicObjectPos(id: Int): Vector3D {
+        val native = getNative("GetDynamicObjectPos")
+
         val refX = ReferenceFloat(0.0f)
         val refY = ReferenceFloat(0.0f)
         val refZ = ReferenceFloat(0.0f)
-        getDynamicObjectPos!!.call(id, refX, refY, refZ)
+
+        native.call(id, refX, refY, refZ)
         return Vector3D(refX.value, refY.value, refZ.value)
     }
 
-    fun setDynamicObjectRot(`object`: DynamicObject, rot: Vector3D) {
-        setDynamicObjectRot(`object`.id, rot)
-    }
+    fun setDynamicObjectRot(obj: DynamicObject, rot: Vector3D) = setDynamicObjectRot(obj.id, rot)
 
-    fun setDynamicObjectRot(id: Int, rot: Vector3D) {
-        setDynamicObjectRot(id, rot.x, rot.y, rot.z)
-    }
+    fun setDynamicObjectRot(id: Int, rot: Vector3D) = setDynamicObjectRot(id, rot.x, rot.y, rot.z)
 
     fun setDynamicObjectRot(id: Int, x: Float, y: Float, z: Float) {
-        setDynamicObjectRot!!.call(id, x, y, z)
+        val native = getNative("SetDynamicObjectRot")
+        native.call(id, x, y, z)
     }
 
-    fun getDynamicObjectRot(`object`: DynamicObject): Vector3D {
-        return getDynamicObjectRot(`object`.id)
-    }
+    fun getDynamicObjectRot(obj: DynamicObject) = getDynamicObjectRot(obj.id)
 
     fun getDynamicObjectRot(id: Int): Vector3D {
+        val native = getNative("GetDynamicObjectRot")
         val refX = ReferenceFloat(0.0f)
         val refY = ReferenceFloat(0.0f)
         val refZ = ReferenceFloat(0.0f)
-        getDynamicObjectRot!!.call(id, refX, refY, refZ)
+        native.call(id, refX, refY, refZ)
         return Vector3D(refX.value, refY.value, refZ.value)
     }
 
     fun moveDynamicObject(id: Int, newPos: Vector3D, speed: Float, newRot: Vector3D) {
-        moveDynamicObject!!.call(id, newPos.x, newPos.y, newPos.z, speed, newRot.x, newRot.y, newRot.z)
+        val native = getNative("MoveDynamicObject")
+        native.call(id, newPos.x, newPos.y, newPos.z, speed, newRot.x, newRot.y, newRot.z)
     }
 
     fun stopDynamicObject(id: Int) {
-        stopDynamicObject!!.call(id)
+        val native = getNative("StopDynamicObject")
+        native.call(id)
     }
 
     fun isDynamicObjectMoving(id: Int): Boolean {
-        return isDynamicObjectMoving!!.call(id) as Int > 0
+        val native = getNative("IsDynamicObjectMoving")
+        return native.call(id) as Int > 0
     }
 
-    fun attachCameraToDynamicObject(playerid: Int, objectId: Int) {
-        attachCameraToDynamicObject!!.call(playerid, objectId)
+    fun attachCameraToDynamicObject(playerId: Int, objectId: Int) {
+        val native = getNative("AttachCameraToDynamicObject")
+        native.call(playerId, objectId)
     }
 
-    fun attachDynamicObjectToObject(`object`: Int, toObject: Int, offsetX: Float, offsetY: Float, offsetZ: Float, rotX: Float, rotY: Float, rotZ: Float, syncRotation: Boolean) {
-        attachDynamicObjectToObject!!.call(`object`, toObject, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, if (syncRotation) 1 else 0)
+    fun attachDynamicObjectToObject(obj: Int, toObject: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
+                                    rotX: Float, rotY: Float, rotZ: Float, syncRotation: Boolean) {
+        val native = getNative("AttachDynamicObjectToObject")
+        native.call(obj, toObject, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, if (syncRotation) 1 else 0)
     }
 
-    fun attachDynamicObjectToPlayer(`object`: Int, playerid: Int, offsetX: Float, offsetY: Float, offsetZ: Float, rotX: Float, rotY: Float, rotZ: Float) {
-        attachDynamicObjectToPlayer!!.call(`object`, playerid, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
+    fun attachDynamicObjectToPlayer(obj: Int, playerId: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
+                                    rotX: Float, rotY: Float, rotZ: Float) {
+        val native = getNative("AttachDynamicObjectToPlayer")
+        native.call(obj, playerId, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
     }
 
-    fun attachDynamicObjectToVehicle(`object`: Int, vehicle: Int, offsetX: Float, offsetY: Float, offsetZ: Float, rotX: Float, rotY: Float, rotZ: Float) {
-        attachDynamicObjectToVehicle!!.call(`object`, vehicle, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
+    fun attachDynamicObjectToVehicle(obj: Int, vehicle: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
+                                     rotX: Float, rotY: Float, rotZ: Float) {
+        val native = getNative("AttachDynamicObjectToVehicle")
+        native.call(obj, vehicle, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
     }
 
-    fun editDynamicObject(playerid: Int, objectId: Int) {
-        editDynamicObject!!.call(playerid, objectId)
+    fun editDynamicObject(playerId: Int, objectId: Int) {
+        val native = getNative("EditDynamicObject")
+        native.call(playerId, objectId)
     }
 
-    fun isDynamicObjectMaterialUsed(objectid: Int, materialindex: Int): Boolean {
-        return isDynamicObjectMaterialUsed!!.call(objectid, materialindex) as Int > 0
+    fun isDynamicObjectMaterialUsed(objectid: Int, materialIndex: Int): Boolean {
+        val native = getNative("IsDynamicObjectMaterialUsed")
+        return native.call(objectid, materialIndex) as Int > 0
     }
 
-    fun getDynamicObjectMaterial(objectid: Int, materialindex: Int): DynamicObjectMaterial {
+    fun getDynamicObjectMaterial(objectId: Int, materialIndex: Int): DynamicObjectMaterial {
+        val native = getNative("GetDynamicObjectMaterial")
+
         val refModel = ReferenceInt(0)
         val refMaterialColor = ReferenceInt(0)
         val refTxdName = ReferenceString("", 128)
         val refTextureName = ReferenceString("", 128)
-        getDynamicObjectMaterial!!.call(objectid, materialindex, refModel, refTxdName, refTextureName, refMaterialColor, refTxdName.length, refTextureName.length)
+
+        native.call(objectId, materialIndex, refModel, refTxdName, refTextureName,
+                refMaterialColor, refTxdName.length, refTextureName.length)
         return DynamicObjectMaterial(refModel.value, refMaterialColor.value, refTxdName.value, refTextureName.value)
     }
 
-    fun setDynamicObjectMaterial(objectid: Int, materialindex: Int, modelid: Int, txdname: String, texturename: String, materialcolor: Int) {
-        setDynamicObjectMaterial!!.call(objectid, materialindex, modelid, txdname, texturename, materialcolor)
+    fun setDynamicObjectMaterial(objectId: Int, materialIndex: Int, modelId: Int, txdName: String, textureName: String,
+                                 materialColor: Int) {
+        val native = getNative("SetDynamicObjectMaterial")
+        native.call(objectId, materialIndex, modelId, txdName, textureName, materialColor)
     }
 
-    fun isDynamicObjectMaterialTextUsed(objectid: Int, materialindex: Int): Boolean {
-        return isDynamicObjectMaterialTextUsed!!.call(objectid, materialindex) as Int > 0
+    fun isDynamicObjectMaterialTextUsed(objectId: Int, materialIndex: Int): Boolean {
+        val native = getNative("IsDynamicObjectMaterialTextUsed")
+        return native.call(objectId, materialIndex) as Int > 0
     }
 
-    fun getDynamicObjectMaterialText(objectid: Int, materialindex: Int): DynamicObjectMaterialText {
+    fun getDynamicObjectMaterialText(objectId: Int, materialIndex: Int): DynamicObjectMaterialText {
+        val native = getNative("GetDynamicObjectMaterialText")
         val refText = ReferenceString("", 256)
         val refMaterialSize = ReferenceInt(0)
         val refFontFace = ReferenceString("", 64)
@@ -311,156 +253,208 @@ object Functions {
         val refFontColor = ReferenceInt(0)
         val refBackColor = ReferenceInt(0)
         val refTextAlignment = ReferenceInt(0)
-        getDynamicObjectMaterialText!!.call(objectid, materialindex, refText, refMaterialSize, refFontFace, refFontSize, refBold, refFontColor, refBackColor, refTextAlignment, refText.length, refFontFace.length)
-        return DynamicObjectMaterialText(refText.value, refFontFace.value, refMaterialSize.value, refFontSize.value, refBold.value > 0, refFontColor.value, refBackColor.value, refTextAlignment.value)
+        native.call(objectId, materialIndex, refText, refMaterialSize, refFontFace, refFontSize, refBold,
+                refFontColor, refBackColor, refTextAlignment, refText.length, refFontFace.length)
+        return DynamicObjectMaterialText(refText.value, refFontFace.value, refMaterialSize.value, refFontSize.value,
+                refBold.value > 0, refFontColor.value, refBackColor.value, refTextAlignment.value)
     }
 
-    fun setDynamicObjectMaterialText(objectid: Int, materialindex: Int, text: String, materialsize: ObjectMaterialSize, fontFace: String, fontSize: Int, bold: Boolean, fontColor: Int, backColor: Int, textAlignment: Int) {
-        setDynamicObjectMaterialText!!.call(objectid, materialindex, text, materialsize.value, fontFace, fontSize, if (bold) 1 else 0, fontColor, backColor, textAlignment)
+    fun setDynamicObjectMaterialText(objectId: Int, materialIndex: Int, text: String, materialSize: ObjectMaterialSize,
+                                     fontFace: String, fontSize: Int, bold: Boolean, fontColor: Int, backColor: Int,
+                                     textAlignment: Int) {
+        val native = getNative("SetDynamicObjectMaterialText")
+        native.call(objectId, materialIndex, text, materialSize.value, fontFace,
+                fontSize, if (bold) 1 else 0, fontColor, backColor, textAlignment)
     }
-
-    //Pickups:
 
     @JvmOverloads
-    fun createDynamicPickup(modelid: Int, type: Int, location: Location, playerId: Int = 0, streamDistance: Float = 200f,
+    fun createDynamicPickup(modelId: Int, type: Int, location: Location, playerId: Int = -1, streamDistance: Float = 200f,
                             area: Int = -1, priority: Int = 0): DynamicPickup {
-        val id = createDynamicPickup!!.call(modelid, type, location.x, location.y, location.z, location.worldId,
+        val native = getNative("CreateDynamicPickup")
+        val id = native.call(modelId, type, location.x, location.y, location.z, location.worldId,
                 location.interiorId, playerId, streamDistance, area, priority) as Int
-        return DynamicPickup(id, modelid, type, Player.get(playerId), streamDistance)
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return DynamicPickup(id, modelId, type, player, streamDistance)
     }
 
     fun destroyDynamicPickup(id: Int) {
-        destroyDynamicPickup!!.call(id)
+        val native = getNative("DestroyDynamicPickup")
+        native.call(id)
     }
 
     fun isValidDynamicPickup(id: Int): Boolean {
-        return isValidDynamicPickup!!.call(id) as Int > 0
+        val native = getNative("IsValidDynamicPickup")
+        return native.call(id) as Int > 0
     }
 
     @JvmOverloads
     fun createDynamic3DTextLabel(text: String, color: Color, location: Location,
-                                 drawDistance: Float = 200f, attachedPlayer: Int = -1, attachedVehicle: Int = -1, testLOS: Int = 0,
-                                 playerid: Int = -1, streamDistance: Float = 200f, area: Int = -1, priority: Int = 0): Dynamic3DTextLabel {
-
-        val id = createDynamic3DTextLabel!!.call(text, color.value, location.x, location.y, location.z,
-                drawDistance, attachedPlayer, attachedVehicle, testLOS, location.worldId, location.interiorId, playerid,
+                                 drawDistance: Float = 200f, attachedPlayer: Int = -1, attachedVehicle: Int = -1,
+                                 testLOS: Int = 0, playerId: Int = -1, streamDistance: Float = 200f,
+                                 area: Int = -1, priority: Int = 0): Dynamic3DTextLabel {
+        val native = getNative("CreateDynamic3DTextLabel")
+        val id = native.call(text, color.value, location.x, location.y, location.z,
+                drawDistance, attachedPlayer, attachedVehicle, testLOS, location.worldId, location.interiorId, playerId,
                 streamDistance, area, priority) as Int
-        return Dynamic3DTextLabel(id, text, playerid, color, streamDistance, drawDistance)
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return Dynamic3DTextLabel(id, text, player, color, streamDistance, drawDistance)
     }
 
     fun destroyDynamic3DTextLabel(id: Int) {
-        destroyDynamic3DTextLabel!!.call(id)
+        val native = getNative("DestroyDynamic3DTextLabel")
+        native.call(id)
     }
 
     fun isValidDynamic3DTextLabel(id: Int): Boolean {
-        return isValidDynamic3DTextLabel!!.call(id) as Int > 0
+        val native = getNative("IsValidDynamic3DTextLabel")
+        return native.call(id) as Int > 0
     }
 
     fun getDynamic3DTextLabelText(id: Int): String {
-        val text = ""
-        getDynamic3DTextLabelText!!.call(id, text, 1024)
-        return text
+        val native = getNative("GetDynamic3DTextLabelText")
+        val refText = ReferenceString("", 1024)
+        native.call(id, refText, 1024)
+        return refText.value
     }
 
     fun updateDynamic3DTextLabelText(id: Int, color: Color, text: String) {
-        updateDynamic3DTextLabelText!!.call(id, color.value, text)
+        val native = getNative("UpdateDynamic3DTextLabel")
+        native.call(id, color.value, text)
     }
 
-    @JvmOverloads fun update(player: Player, streamerType: StreamerType = StreamerType.ALL) {
-        update!!.call(player.id, streamerType.value)
+    @JvmOverloads
+    fun update(player: Player, streamerType: StreamerType = StreamerType.ALL) {
+        val native = getNative("Streamer_Update")
+        native.call(player.id, streamerType.value)
     }
 
-    @JvmOverloads fun updateEx(player: Player, x: Float, y: Float, z: Float, worldid: Int, interiorid: Int,
-                               streamerType: StreamerType = StreamerType.ALL, compensatedTime: Int = -1) {
-        updateEx!!.call(player.id, x, y, z, worldid, interiorid, streamerType.value, compensatedTime)
+    @JvmOverloads
+    fun updateEx(player: Player, x: Float, y: Float, z: Float, worldId: Int, interiorId: Int,
+                 streamerType: StreamerType = StreamerType.ALL, compensatedTime: Int = -1) {
+        val native = getNative("Streamer_UpdateEx")
+        native.call(player.id, x, y, z, worldId, interiorId, streamerType.value, compensatedTime)
     }
-
-    //MapIcons:
 
     @JvmOverloads
     fun createDynamicMapIcon(location: Location, type: Int, color: Color, playerId: Int = -1,
                              streamDistance: Float = 200f,
                              style: MapIconStyle = MapIconStyle.LOCAL, area: DynamicArea? = null,
                              priority: Int = 0): DynamicMapIcon {
+        val native = getNative("CreateDynamicMapIcon")
         val areaId = area?.id ?: -1
 
-        val id = createDynamicMapIcon!!.call(location.x, location.y, location.z, type,
-                color.value, location.worldId, location.interiorId, playerId, streamDistance, style.value, areaId, priority) as Int
+        val id = native.call(location.x, location.y, location.z, type, color.value, location.worldId,
+                location.interiorId, playerId, streamDistance, style.value, areaId, priority) as Int
+        val player = if(playerId != -1) Player.get(playerId) else null
         if (id <= 0) throw CreationFailedException("CreateDynamicMapIcon returned an invalid id.")
-        return DynamicMapIcon(id, location, type, color, Player.get(playerId), streamDistance, style)
+        return DynamicMapIcon(id, location, type, color, player, streamDistance, style)
     }
 
     fun destroyDynamicMapIcon(mapIcon: DynamicMapIcon) {
-        destroyDynamicMapIcon!!.call(mapIcon.id)
+        val native = getNative("DestroyDynamicMapIcon")
+        native.call(mapIcon.id)
     }
 
     fun isValidDynamicMapIcon(mapIcon: DynamicMapIcon): Boolean {
-        return isValidDynamicMapIcon!!.call(mapIcon.id) as Int == 1
+        val native = getNative("IsValidDynamicMapIcon")
+        return native.call(mapIcon.id) as Int == 1
     }
 
-    //Areas:
-
-    fun createDynamicCircle(location: Location, size: Float, playerId: Int): DynamicCircle {
-        val id = createDynamicCircle!!.call(location.x, location.y, size, location.worldId, location.interiorId, playerId) as Int
-        return DynamicCircle(id, Player.get(playerId))
+    @JvmOverloads
+    fun createDynamicCircle(location: Location, size: Float, playerId: Int = -1): DynamicCircle {
+        val native = getNative("CreateDynamicCircle")
+        val id = native.call(location.x, location.y, size, location.worldId, location.interiorId, playerId) as Int
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return DynamicCircle(id, player)
     }
 
-    fun createDynamicSphere(location: Location, size: Float, playerId: Int): DynamicSphere {
-        val id = createDynamicSphere!!.call(location.x, location.y, location.z, size, location.worldId, location.interiorId, playerId) as Int
-        return DynamicSphere(id, Player.get(playerId))
+    @JvmOverloads
+    fun createDynamicSphere(location: Location, size: Float, playerId: Int = -1): DynamicSphere {
+        val native = getNative("CreateDynamicSphere")
+        val id = native.call(location.x, location.y, location.z, size, location.worldId,
+                location.interiorId, playerId) as Int
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return DynamicSphere(id, player)
     }
 
-    fun createDynamicRectangle(area: Area, worldId: Int, interiorId: Int, playerId: Int): DynamicRectangle {
-        val id = createDynamicRectangle!!.call(area.minX, area.minY, area.maxX, area.maxY, worldId, interiorId, playerId) as Int
-        return DynamicRectangle(id, Player.get(playerId))
+    @JvmOverloads
+    fun createDynamicRectangle(area: Area, worldId: Int, interiorId: Int, playerId: Int = -1): DynamicRectangle {
+        val native = getNative("CreateDynamicRectangle")
+        val id = native.call(area.minX, area.minY, area.maxX, area.maxY, worldId, interiorId, playerId) as Int
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return DynamicRectangle(id, player)
     }
 
-    fun createDynamicCuboid(area: Area3D, worldId: Int, interiorId: Int, playerId: Int): DynamicCuboid {
-        val id = createDynamicCuboid!!.call(area.minX, area.minY, area.minZ, area.maxX, area.maxY, area.maxZ, worldId, interiorId, playerId) as Int
-        return DynamicCuboid(id, Player.get(playerId))
+    @JvmOverloads
+    fun createDynamicCuboid(area: Area3D, worldId: Int, interiorId: Int, playerId: Int = -1): DynamicCuboid {
+        val native = getNative("CreateDynamicCuboid")
+        val id = native.call(area.minX, area.minY, area.minZ, area.maxX, area.maxY, area.maxZ,
+                worldId, interiorId, playerId) as Int
+        val player = if(playerId != -1) Player.get(playerId) else null
+        return DynamicCuboid(id, player)
     }
 
     fun destroyDynamicArea(area: DynamicArea) {
-        destroyDynamicArea!!.call(area.id)
+        val native = getNative("DestroyDynamicArea")
+        native.call(area.id)
     }
 
     fun isValidDynamicArea(area: DynamicArea): Boolean {
-        return isValidDynamicArea!!.call(area.id) as Int == 1
+        val native = getNative("IsValidDynamicArea")
+        return native.call(area.id) as Int == 1
     }
 
-    fun isPlayerInDynamicArea(playerId: Int, area: DynamicArea): Boolean {
-        return isPlayerInDynamicArea!!.call(playerId, area.id, 0) as Int == 1
+    @JvmOverloads
+    fun isPlayerInDynamicArea(playerId: Int, area: DynamicArea, recheck: Int = 0): Boolean {
+        val native = getNative("IsPlayerInDynamicArea")
+        return native.call(playerId, area.id, recheck) as Int == 1
     }
 
-    fun isPlayerInAnyDynamicArea(playerId: Int): Boolean {
-        return isPlayerInAnyDynamicArea!!.call(playerId, 0) as Int == 1
+    @JvmOverloads
+    fun isPlayerInAnyDynamicArea(playerId: Int, recheck: Int = 0): Boolean {
+        val native = getNative("IsPlayerInAnyDynamicArea")
+        return native.call(playerId, recheck) as Int == 1
     }
 
-    fun isAnyPlayerInDynamicArea(area: DynamicArea): Boolean {
-        return isAnyPlayerInDynamicArea!!.call(area.id, 0) as Int == 1
+    @JvmOverloads
+    fun isAnyPlayerInDynamicArea(area: DynamicArea, recheck: Int = 0): Boolean {
+        val native = getNative("IsAnyPlayerInDynamicArea")
+        return native.call(area.id, recheck) as Int == 1
     }
 
-    fun isAnyPlayerInAnyDynamicArea(): Boolean {
-        return isAnyPlayerInAnyDynamicArea!!.call(0) as Int == 1
+    @JvmOverloads
+    fun isAnyPlayerInAnyDynamicArea(recheck: Int = 0): Boolean {
+        val native = getNative("IsAnyPlayerInAnyDynamicArea")
+        return native.call(recheck) as Int == 1
     }
 
     fun isPointInDynamicArea(area: DynamicArea, point: Vector3D): Boolean {
-        return isPointInDynamicArea!!.call(area.id, point.x, point.y, point.z) as Int == 1
+        val native = getNative("IsPointInDynamicArea")
+        return native.call(area.id, point.x, point.y, point.z) as Int == 1
     }
 
-    fun IsPointInAnyDynamicArea(point: Vector3D): Boolean {
-        return isPointInAnyDynamicArea!!.call(point.x, point.y, point.z) as Int == 1
+    fun isPointInAnyDynamicArea(point: Vector3D): Boolean {
+        val native = getNative("IsPointInAnyDynamicArea")
+        return native.call(point.x, point.y, point.z) as Int == 1
     }
 
-    fun attachDynamicAreaToObject(area: DynamicArea, `object`: DynamicObject, offset: Vector3D) {
-        attachDynamicAreaToObject!!.call(area.id, `object`.id, 2, 0xFFFF, offset.x, offset.y, offset.z)
+    @JvmOverloads
+    fun attachDynamicAreaToObject(area: DynamicArea, obj: DynamicObject,
+                                  objectType: StreamerObjectType = StreamerObjectType.DYNAMIC,
+                                  playerId: Int = 0xFFFF, offset: Vector3D) {
+        val native = getNative("AttachDynamicAreaToObject")
+        native.call(area.id, obj.id, objectType.value, playerId, offset.x, offset.y, offset.z)
     }
 
     fun attachDynamicAreaToPlayer(area: DynamicArea, player: Player, offset: Vector3D) {
-        attachDynamicAreaToPlayer!!.call(area.id, player.id, offset.x, offset.y, offset.z)
+        val native = getNative("AttachDynamicAreaToPlayer")
+        native.call(area.id, player.id, offset.x, offset.y, offset.z)
     }
 
     fun attachDynamicAreaToVehicle(area: DynamicArea, vehicle: Vehicle, offset: Vector3D) {
-        attachDynamicAreaToVehicle!!.call(area.id, vehicle.id, offset.x, offset.y, offset.z)
+        val native = getNative("AttachDynamicAreaToVehicle")
+        native.call(area.id, vehicle.id, offset.x, offset.y, offset.z)
     }
+
+    private fun getNative(name: String) = functions[name] ?: throw NativeNotFoundException(name)
 }
