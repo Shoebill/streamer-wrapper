@@ -3,6 +3,7 @@ package net.gtaun.shoebill.streamer
 import net.gtaun.shoebill.`object`.Player
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.resource.Plugin
+import net.gtaun.shoebill.streamer.autoupdate.StreamerUpdateService
 import net.gtaun.shoebill.streamer.data.StreamerType
 
 /**
@@ -20,6 +21,7 @@ class Streamer : Plugin() {
     @Throws(Throwable::class)
     override fun onEnable() {
         instance = this
+        StreamerUpdateService.autoInstall()
         Functions.registerHandlers(eventManager)
         Callbacks.registerHandlers(eventManager)
     }

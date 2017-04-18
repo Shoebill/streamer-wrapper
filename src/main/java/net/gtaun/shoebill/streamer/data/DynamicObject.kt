@@ -174,8 +174,6 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             val `object` = Functions.createDynamicObject(modelId, location, rotation, streamDistance, drawDistance,
                     playerId, areaId, priority)
 
-
-
             objects.add(`object`)
             return `object`
         }
