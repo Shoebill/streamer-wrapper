@@ -9,10 +9,10 @@ import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
-import net.gtaun.shoebill.streamer.event.DynamicObjectMovedEvent
-import net.gtaun.shoebill.streamer.event.PlayerEditDynamicObjectEvent
-import net.gtaun.shoebill.streamer.event.PlayerSelectDynamicObjectEvent
-import net.gtaun.shoebill.streamer.event.PlayerShootDynamicObjectEvent
+import net.gtaun.shoebill.streamer.event.obj.DynamicObjectMovedEvent
+import net.gtaun.shoebill.streamer.event.obj.PlayerEditDynamicObjectEvent
+import net.gtaun.shoebill.streamer.event.obj.PlayerSelectDynamicObjectEvent
+import net.gtaun.shoebill.streamer.event.obj.PlayerShootDynamicObjectEvent
 import net.gtaun.util.event.Attentions
 import net.gtaun.util.event.EventHandler
 import net.gtaun.util.event.HandlerEntry

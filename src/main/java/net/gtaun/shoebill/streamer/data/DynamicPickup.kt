@@ -6,7 +6,7 @@ import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
-import net.gtaun.shoebill.streamer.event.PlayerPickUpDynamicPickupEvent
+import net.gtaun.shoebill.streamer.event.pickup.PlayerPickUpDynamicPickupEvent
 import net.gtaun.util.event.Attentions
 import net.gtaun.util.event.EventHandler
 import net.gtaun.util.event.HandlerEntry

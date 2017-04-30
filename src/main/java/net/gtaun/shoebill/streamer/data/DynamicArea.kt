@@ -7,8 +7,8 @@ import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
 import net.gtaun.shoebill.streamer.Streamer
-import net.gtaun.shoebill.streamer.event.PlayerEnterDynamicAreaEvent
-import net.gtaun.shoebill.streamer.event.PlayerLeaveDynamicAreaEvent
+import net.gtaun.shoebill.streamer.event.area.PlayerEnterDynamicAreaEvent
+import net.gtaun.shoebill.streamer.event.area.PlayerLeaveDynamicAreaEvent
 import net.gtaun.util.event.Attentions
 import net.gtaun.util.event.EventHandler
 import net.gtaun.util.event.HandlerEntry

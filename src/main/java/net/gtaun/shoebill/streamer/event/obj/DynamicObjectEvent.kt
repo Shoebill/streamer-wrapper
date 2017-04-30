@@ -1,4 +1,4 @@
-package net.gtaun.shoebill.streamer.event
+package net.gtaun.shoebill.streamer.event.obj
 
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.data.DynamicObject
