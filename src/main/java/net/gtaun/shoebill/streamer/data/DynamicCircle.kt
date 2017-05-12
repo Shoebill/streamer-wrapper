@@ -15,10 +15,10 @@ class DynamicCircle(id: Int, player: Player?) : DynamicArea(id, player) {
     companion object {
         @JvmOverloads
         @JvmStatic
-        fun create(location: Location, size: Float, player: Player? = null): DynamicCircle {
+        fun create(location: Location, size: Float, player: Player? = null, priority: Int = 0): DynamicCircle {
             val playerId = player?.id ?: -1
 
-            val circle = Functions.createDynamicCircle(location, size, playerId)
+            val circle = Functions.createDynamicCircle(location, size, playerId, priority)
             areas.add(circle)
             return circle
         }

@@ -403,7 +403,7 @@ object Functions {
     }
 
     fun updateDynamic3DTextLabelText(id: Int, color: Color, text: String) {
-        get("UpdateDynamic3DTextLabel").call(id, color.value, text)
+        get("UpdateDynamic3DTextLabelText").call(id, color.value, text)
     }
 
     @JvmOverloads
@@ -437,9 +437,10 @@ object Functions {
             get("IsValidDynamicMapIcon").call(mapIcon.id) as Int == 1
 
     @JvmOverloads
-    fun createDynamicCircle(location: Location, size: Float, playerId: Int = -1): DynamicCircle {
+    fun createDynamicCircle(location: Location, size: Float, playerId: Int = -1, priority: Int = 0): DynamicCircle {
         val native = get("CreateDynamicCircle")
-        val id = native.call(location.x, location.y, size, location.worldId, location.interiorId, playerId) as Int
+        val id = native.call(location.x, location.y, size, location.worldId, location.interiorId, playerId,
+                priority) as Int
         val player = if(playerId != -1) Player.get(playerId) else null
         return DynamicCircle(id, player)
     }
@@ -462,10 +463,11 @@ object Functions {
     }
 
     @JvmOverloads
-    fun createDynamicCuboid(area: Area3D, worldId: Int, interiorId: Int, playerId: Int = -1): DynamicCuboid {
+    fun createDynamicCuboid(area: Area3D, worldId: Int, interiorId: Int, playerId: Int = -1,
+                            priority: Int = 0): DynamicCuboid {
         val native = get("CreateDynamicCuboid")
         val id = native.call(area.minX, area.minY, area.minZ, area.maxX, area.maxY, area.maxZ,
-                worldId, interiorId, playerId) as Int
+                worldId, interiorId, playerId, priority) as Int
         val player = Player.get(playerId)
         return DynamicCuboid(id, player)
     }

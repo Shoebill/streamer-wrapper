@@ -31,13 +31,6 @@ class Streamer : Plugin() {
         get() = Functions.isToggleErrorCallback()
         set(value) = Functions.toggleErrorCallback(value)
 
-    companion object {
-        lateinit private var instance: Streamer
-
-        @JvmStatic
-        fun get() = instance
-    }
-
     @Throws(Throwable::class)
     override fun onEnable() {
         instance = this
@@ -115,4 +108,11 @@ class Streamer : Plugin() {
 
     fun isToggleItemCallbacks(type: StreamerType, id: Int) =
             Functions.isToggleItemCallbacks(type, id)
+
+    companion object {
+        lateinit private var instance: Streamer
+
+        @JvmStatic
+        fun get() = instance
+    }
 }
