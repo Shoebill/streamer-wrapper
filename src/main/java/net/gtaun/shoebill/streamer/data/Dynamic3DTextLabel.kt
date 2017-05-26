@@ -1,8 +1,8 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
-import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
+import net.gtaun.shoebill.entities.Vehicle
 import net.gtaun.shoebill.data.Color
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.streamer.AllOpen
@@ -42,9 +42,8 @@ class Dynamic3DTextLabel internal constructor(id: Int, val player: Player?, val 
             textLabels.remove(this)
     }
 
-    override fun isDestroyed(): Boolean {
-        return !Functions.isValidDynamic3DTextLabel(id)
-    }
+    override val isDestroyed: Boolean
+        get() = !Functions.isValidDynamic3DTextLabel(id)
 
     companion object {
 

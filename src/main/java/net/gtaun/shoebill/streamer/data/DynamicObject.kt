@@ -1,8 +1,8 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
-import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
+import net.gtaun.shoebill.entities.Vehicle
 import net.gtaun.shoebill.constant.ObjectMaterialSize
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.data.Vector3D
@@ -104,7 +104,8 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
 
     private fun removeSelf() = objects.remove(this)
 
-    override fun isDestroyed(): Boolean = !Functions.isValidDynamicObject(id)
+    override val isDestroyed: Boolean
+        get() = !Functions.isValidDynamicObject(id)
 
     private var eventHandlers: MutableList<HandlerEntry> = mutableListOf()
 
@@ -112,8 +113,8 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             onObjectMoved(EventHandler { handler(it) })
 
     fun onObjectMoved(handler: EventHandler<DynamicObjectMovedEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(DynamicObjectMovedEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(DynamicObjectMovedEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
@@ -122,15 +123,15 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             onPlayerEditObject(EventHandler { handler(it) })
 
     fun onPlayerEditObject(handler: EventHandler<PlayerEditDynamicObjectEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerEditDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerEditDynamicObjectEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
 
     fun onPlayerSelectObject(handler: EventHandler<PlayerSelectDynamicObjectEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerSelectDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerSelectDynamicObjectEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
@@ -139,8 +140,8 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             onPlayerSelectObject(EventHandler { handler(it) })
 
     fun onPlayerShootObject(handler: EventHandler<PlayerShootDynamicObjectEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerShootDynamicObjectEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerShootDynamicObjectEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
@@ -171,11 +172,11 @@ class DynamicObject(id: Int, val modelid: Int, val playerid: Int, val streamDist
             val playerId = player?.id ?: -1
             val areaId = area?.id ?: -1
 
-            val `object` = Functions.createDynamicObject(modelId, location, rotation, streamDistance, drawDistance,
+            val entities = Functions.createDynamicObject(modelId, location, rotation, streamDistance, drawDistance,
                     playerId, areaId, priority)
 
-            objects.add(`object`)
-            return `object`
+            objects.add(entities)
+            return entities
         }
     }
 }

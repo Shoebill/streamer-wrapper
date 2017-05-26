@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.constant.MapIconStyle
 import net.gtaun.shoebill.data.Color
 import net.gtaun.shoebill.data.Location
@@ -29,7 +29,8 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
         removeSelf()
     }
 
-    override fun isDestroyed(): Boolean = id == -1
+    override val isDestroyed: Boolean
+        get() = id == -1
 
     private fun removeSelf() = objects.remove(this)
 
@@ -52,11 +53,11 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
                    area: DynamicArea? = null): DynamicMapIcon {
             val playerId = player?.id ?: -1
 
-            val `object` = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
+            val entities = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
                     priority)
 
-            objects.add(`object`)
-            return `object`
+            objects.add(entities)
+            return entities
         }
     }
 }

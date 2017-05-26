@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
@@ -45,14 +45,15 @@ class DynamicPickup(id: Int, val modelid: Int, val type: Int, val player: Player
             onPlayerPickup(EventHandler { handler(it) })
 
     fun onPlayerPickup(handler: EventHandler<PlayerPickUpDynamicPickupEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,
-                HandlerPriority.NORMAL, Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerPickUpDynamicPickupEvent::class.java,handler,
+                HandlerPriority.NORMAL, Attentions.create().`object`(this))
         pickupHandlers.add(entry)
         return entry
     }
 
 
-    override fun isDestroyed(): Boolean = !Functions.isValidDynamicPickup(this.id)
+    override val isDestroyed: Boolean
+        get() = !Functions.isValidDynamicPickup(this.id)
 
     companion object {
 

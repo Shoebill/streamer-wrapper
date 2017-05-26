@@ -1,6 +1,6 @@
 package net.gtaun.shoebill.streamer.event.actor
 
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.constant.WeaponModel
 import net.gtaun.shoebill.event.player.PlayerEvent
 import net.gtaun.shoebill.streamer.data.DynamicActor

@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.data.Radius
 import net.gtaun.shoebill.streamer.Functions
 import java.util.*
@@ -26,8 +26,8 @@ open class DynamicCheckpoint internal constructor(id: Int, val location: Radius,
         id = -1
     }
 
-    override fun isDestroyed(): Boolean =
-            !Functions.isValidDynamicCp(this)
+    override val isDestroyed: Boolean
+        get() = !Functions.isValidDynamicCp(this)
 
     companion object {
 

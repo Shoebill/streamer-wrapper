@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer
 
-import net.gtaun.shoebill.`object`.Player
-import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.entities.Player
+import net.gtaun.shoebill.entities.Vehicle
 import net.gtaun.shoebill.amx.AmxCallable
 import net.gtaun.shoebill.amx.AmxInstance
 import net.gtaun.shoebill.amx.types.ReferenceFloat
@@ -196,7 +196,7 @@ object Functions {
 
     fun registerHandlers(eventManager: EventManager) {
         eventManagerNode = eventManager.createChildNode()
-        val amxInstance = AmxInstance.getDefault()
+        val amxInstance = AmxInstance.default!!
         var errors = 0
         FUNCTION_LIST.forEach { functionName ->
             val native = amxInstance.getNative(functionName)
@@ -237,7 +237,7 @@ object Functions {
 
     fun destroyDynamicObject(obj: DynamicObject) = destroyDynamicObject(obj.id)
 
-    fun destroyDynamicObject(id: Int): Any =
+    fun destroyDynamicObject(id: Int): Any? =
             get("DestroyDynamicObject").call(id)
 
     fun isValidDynamicObject(obj: DynamicObject) = isValidDynamicObject(obj.id)
@@ -285,32 +285,32 @@ object Functions {
         return Vector3D(refX.value, refY.value, refZ.value)
     }
 
-    fun moveDynamicObject(id: Int, newPos: Vector3D, speed: Float, newRot: Vector3D): Any =
+    fun moveDynamicObject(id: Int, newPos: Vector3D, speed: Float, newRot: Vector3D): Any? =
             get("MoveDynamicObject").call(id, newPos.x, newPos.y, newPos.z, speed, newRot.x, newRot.y, newRot.z)
 
-    fun stopDynamicObject(id: Int): Any =
+    fun stopDynamicObject(id: Int): Any? =
             get("StopDynamicObject").call(id)
 
     fun isDynamicObjectMoving(id: Int) =
             get("IsDynamicObjectMoving").call(id) as Int == 1
 
-    fun attachCameraToDynamicObject(playerId: Int, objectId: Int): Any =
+    fun attachCameraToDynamicObject(playerId: Int, objectId: Int): Any? =
             get("AttachCameraToDynamicObject").call(playerId, objectId)
 
     fun attachDynamicObjectToObject(obj: Int, toObject: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
-                                    rotX: Float, rotY: Float, rotZ: Float, syncRotation: Boolean): Any =
+                                    rotX: Float, rotY: Float, rotZ: Float, syncRotation: Boolean): Any? =
             get("AttachDynamicObjectToObject")
                     .call(obj, toObject, offsetX, offsetY, offsetZ, rotX, rotY, rotZ, if (syncRotation) 1 else 0)
 
     fun attachDynamicObjectToPlayer(obj: Int, playerId: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
-                                    rotX: Float, rotY: Float, rotZ: Float): Any =
+                                    rotX: Float, rotY: Float, rotZ: Float): Any? =
             get("AttachDynamicObjectToPlayer").call(obj, playerId, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
 
     fun attachDynamicObjectToVehicle(obj: Int, vehicle: Int, offsetX: Float, offsetY: Float, offsetZ: Float,
-                                     rotX: Float, rotY: Float, rotZ: Float): Any =
+                                     rotX: Float, rotY: Float, rotZ: Float): Any? =
             get("AttachDynamicObjectToVehicle").call(obj, vehicle, offsetX, offsetY, offsetZ, rotX, rotY, rotZ)
 
-    fun editDynamicObject(playerId: Int, objectId: Int): Any =
+    fun editDynamicObject(playerId: Int, objectId: Int): Any? =
             get("EditDynamicObject").call(playerId, objectId)
 
     fun isDynamicObjectMaterialUsed(objectid: Int, materialIndex: Int) =
@@ -330,7 +330,7 @@ object Functions {
     }
 
     fun setDynamicObjectMaterial(objectId: Int, materialIndex: Int, modelId: Int, txdName: String, textureName: String,
-                                 materialColor: Int): Any =
+                                 materialColor: Int): Any? =
             get("SetDynamicObjectMaterial").call(objectId, materialIndex, modelId, txdName, textureName, materialColor)
 
     fun isDynamicObjectMaterialTextUsed(objectId: Int, materialIndex: Int) =
@@ -370,7 +370,7 @@ object Functions {
         return DynamicPickup(id, modelId, type, player, streamDistance)
     }
 
-    fun destroyDynamicPickup(id: Int): Any =
+    fun destroyDynamicPickup(id: Int): Any? =
             get("DestroyDynamicPickup").call(id)
 
     fun isValidDynamicPickup(id: Int) =
@@ -389,7 +389,7 @@ object Functions {
         return Dynamic3DTextLabel(id, player, location, color, streamDistance, drawDistance)
     }
 
-    fun destroyDynamic3DTextLabel(id: Int): Any =
+    fun destroyDynamic3DTextLabel(id: Int): Any? =
             get("DestroyDynamic3DTextLabel").call(id)
 
     fun isValidDynamic3DTextLabel(id: Int) =
@@ -407,12 +407,12 @@ object Functions {
     }
 
     @JvmOverloads
-    fun update(player: Player, streamerType: StreamerType = StreamerType.ALL): Any =
+    fun update(player: Player, streamerType: StreamerType = StreamerType.ALL): Any? =
             get("Streamer_Update").call(player.id, streamerType.value)
 
     @JvmOverloads
     fun updateEx(player: Player, x: Float, y: Float, z: Float, worldId: Int, interiorId: Int,
-                 streamerType: StreamerType = StreamerType.ALL, compensatedTime: Int = -1): Any =
+                 streamerType: StreamerType = StreamerType.ALL, compensatedTime: Int = -1): Any? =
             get("Streamer_UpdateEx").call(player.id, x, y, z, worldId, interiorId, streamerType.value, compensatedTime)
 
     @JvmOverloads
@@ -430,7 +430,7 @@ object Functions {
         return DynamicMapIcon(id, location, type, color, player, streamDistance, style)
     }
 
-    fun destroyDynamicMapIcon(mapIcon: DynamicMapIcon): Any =
+    fun destroyDynamicMapIcon(mapIcon: DynamicMapIcon): Any? =
             get("DestroyDynamicMapIcon").call(mapIcon.id)
 
     fun isValidDynamicMapIcon(mapIcon: DynamicMapIcon) =
@@ -517,10 +517,10 @@ object Functions {
     fun isValidDynamicCp(checkpoint: DynamicCheckpoint) =
             get("IsValidDynamicCP").call(checkpoint.id) as Int == 1
 
-    fun togglePlayerDynamicCp(player: Player, checkpoint: DynamicCheckpoint, toggle: Boolean): Any =
+    fun togglePlayerDynamicCp(player: Player, checkpoint: DynamicCheckpoint, toggle: Boolean): Any? =
             get("TogglePlayerDynamicCP").call(player.id, checkpoint.id, if (toggle) 1 else 0)
 
-    fun togglePlayerAllDynamicCps(player: Player, toggle: Boolean): Any =
+    fun togglePlayerAllDynamicCps(player: Player, toggle: Boolean): Any? =
             get("TogglePlayerAllDynamicCPs").call(player.id, if (toggle) 1 else 0)
 
     fun isPlayerInDynamicCp(player: Player, checkpoint: DynamicCheckpoint) =
@@ -529,7 +529,7 @@ object Functions {
     fun getPlayerVisibleDynamicCp(player: Player): DynamicCheckpoint? =
             DynamicCheckpoint[get("GetPlayerVisibleDynamicCP").call(player.id) as Int]
 
-    fun destroyDynamicArea(area: DynamicArea): Any = get("DestroyDynamicArea").call(area.id)
+    fun destroyDynamicArea(area: DynamicArea): Any? = get("DestroyDynamicArea").call(area.id)
 
     fun isValidDynamicArea(area: DynamicArea) = get("IsValidDynamicArea").call(area.id) as Int == 1
 
@@ -558,14 +558,14 @@ object Functions {
     @JvmOverloads
     fun attachDynamicAreaToObject(area: DynamicArea, obj: DynamicObject,
                                   objectType: StreamerObjectType = StreamerObjectType.DYNAMIC,
-                                  playerId: Int = 0xFFFF, offset: Vector3D): Any =
+                                  playerId: Int = 0xFFFF, offset: Vector3D): Any? =
             get("AttachDynamicAreaToObject")
                     .call(area.id, obj.id, objectType.value, playerId, offset.x, offset.y, offset.z)
 
-    fun attachDynamicAreaToPlayer(area: DynamicArea, player: Player, offset: Vector3D): Any =
+    fun attachDynamicAreaToPlayer(area: DynamicArea, player: Player, offset: Vector3D): Any? =
             get("AttachDynamicAreaToPlayer").call(area.id, player.id, offset.x, offset.y, offset.z)
 
-    fun attachDynamicAreaToVehicle(area: DynamicArea, vehicle: Vehicle, offset: Vector3D): Any =
+    fun attachDynamicAreaToVehicle(area: DynamicArea, vehicle: Vehicle, offset: Vector3D): Any? =
             get("AttachDynamicAreaToVehicle").call(area.id, vehicle.id, offset.x, offset.y, offset.z)
 
     fun getTickRate() = get("Streamer_GetTickRate").call() as Int
@@ -715,11 +715,11 @@ object Functions {
     }
 
     fun applyDynamicActorAnimation(actor: DynamicActor, animation: Animation, fDelta: Float, loop: Boolean, lockX: Boolean,
-                                   lockY: Boolean, freeze: Boolean, time: Int): Any =
+                                   lockY: Boolean, freeze: Boolean, time: Int): Any? =
             get("ApplyDynamicActorAnimation").call(actor.id, animation.library, animation.name, fDelta, if (loop) 1 else 0,
                     if (lockX) 1 else 0, if (lockY) 1 else 0, if (freeze) 1 else 0, time)
 
-    fun clearDynamicActorAnimations(actor: DynamicActor): Any =
+    fun clearDynamicActorAnimations(actor: DynamicActor): Any? =
             get("ClearDynamicActorAnimations").call(actor.id)
 
     fun getDynamicActorFacingAngle(actor: DynamicActor): Float {
