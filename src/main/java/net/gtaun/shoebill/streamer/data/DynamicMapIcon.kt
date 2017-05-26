@@ -53,11 +53,11 @@ class DynamicMapIcon(id: Int, val location: Location, val type: Int, val color: 
                    area: DynamicArea? = null): DynamicMapIcon {
             val playerId = player?.id ?: -1
 
-            val entities = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
+            val `object` = Functions.createDynamicMapIcon(location, type, color, playerId, streamDistance, style, area,
                     priority)
 
-            objects.add(entities)
-            return entities
+            objects.add(`object`)
+            return `object`
         }
     }
 }

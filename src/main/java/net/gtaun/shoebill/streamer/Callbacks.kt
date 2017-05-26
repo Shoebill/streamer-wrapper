@@ -37,25 +37,25 @@ object Callbacks {
     fun registerHandlers(eventManager: EventManager) {
         amxInstanceManager.apply {
             hookCallback("OnDynamicObjectMoved", { amxCallEvent ->
-                val entities = DynamicObject[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
-                val event = DynamicObjectMovedEvent(entities)
-                eventManager.dispatchEvent(event, entities)
+                val `object` = DynamicObject[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
+                val event = DynamicObjectMovedEvent(`object`)
+                eventManager.dispatchEvent(event, `object`)
             }, "i")
             hookCallback("OnPlayerEditDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
-                val entities = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
-                val event = PlayerEditDynamicObjectEvent(entities, player, amxCallEvent.parameters[2] as Int,
+                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
+                val event = PlayerEditDynamicObjectEvent(`object`, player, amxCallEvent.parameters[2] as Int,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float),
                         Vector3D(amxCallEvent.parameters[6] as Float, amxCallEvent.parameters[7] as Float, amxCallEvent.parameters[8] as Float))
-                eventManager.dispatchEvent(event, player, entities)
+                eventManager.dispatchEvent(event, player, `object`)
             }, "iiiffffff")
             hookCallback("OnPlayerSelectDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
-                val entities = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
+                val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val modelid = amxCallEvent.parameters[2] as Int
-                val event = PlayerSelectDynamicObjectEvent(entities, player, modelid,
+                val event = PlayerSelectDynamicObjectEvent(`object`, player, modelid,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
-                eventManager.dispatchEvent(event, player, entities, modelid)
+                eventManager.dispatchEvent(event, player, `object`, modelid)
             }, "iiifff")
             hookCallback("OnPlayerShootDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int)!!
