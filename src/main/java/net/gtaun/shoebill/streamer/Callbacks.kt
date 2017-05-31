@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer
 
 import net.gtaun.shoebill.Shoebill
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.amx.AmxInstanceManager
 import net.gtaun.shoebill.constant.WeaponModel
 import net.gtaun.shoebill.data.Vector3D
@@ -48,7 +48,7 @@ object Callbacks {
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float),
                         Vector3D(amxCallEvent.parameters[6] as Float, amxCallEvent.parameters[7] as Float, amxCallEvent.parameters[8] as Float))
                 eventManager.dispatchEvent(event, player, `object`)
-            }, "iiiffffff")
+            }, "i", "i", "i", "f", "f", "f", "f", "f", "f")
             hookCallback("OnPlayerSelectDynamicObject", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val `object` = DynamicObject[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
@@ -56,64 +56,64 @@ object Callbacks {
                 val event = PlayerSelectDynamicObjectEvent(`object`, player, modelid,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
                 eventManager.dispatchEvent(event, player, `object`, modelid)
-            }, "iiifff")
+            }, "i", "i", "i", "f", "f", "f")
             hookCallback("OnPlayerShootDynamicObject", { amxCallEvent ->
-                val player = Player.get(amxCallEvent.parameters[0] as Int)
+                val player = Player.get(amxCallEvent.parameters[0] as Int)!!
                 val weaponModel = WeaponModel.get(amxCallEvent.parameters[1] as Int) ?: return@hookCallback
                 val dynamicObject = DynamicObject[amxCallEvent.parameters[2] as Int] ?: return@hookCallback
                 val event = PlayerShootDynamicObjectEvent(dynamicObject, player, weaponModel,
                         Vector3D(amxCallEvent.parameters[3] as Float, amxCallEvent.parameters[4] as Float, amxCallEvent.parameters[5] as Float))
                 eventManager.dispatchEvent(event, player, dynamicObject, weaponModel)
-            }, "iiifff")
+            }, "i", "i", "i", "f", "f", "f")
 
             hookCallback("OnPlayerEnterDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEnterDynamicAreaEvent(player, area)
                 eventManager.dispatchEvent(event, player, area)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerLeaveDynamicArea", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val area = DynamicArea[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerLeaveDynamicAreaEvent(player, area)
                 eventManager.dispatchEvent(event, player, area)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerPickUpDynamicPickup", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val pickup = DynamicPickup[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerPickUpDynamicPickupEvent(player, pickup)
                 eventManager.dispatchEvent(event, player, pickup)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerEnterDynamicCP", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val dynamicCp = DynamicCheckpoint[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEnterDynamicCheckpointEvent(player, dynamicCp)
                 eventManager.dispatchEvent(event, player, dynamicCp)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerLeaveDynamicCP", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val dynamicCp = DynamicCheckpoint[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerLeaveDynamicCheckpointEvent(player, dynamicCp)
                 eventManager.dispatchEvent(event, player, dynamicCp)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerEnterDynamicRaceCP", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val dynamicCp = DynamicRaceCheckpoint[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerEnterDynamicRaceCheckpointEvent(player, dynamicCp)
                 eventManager.dispatchEvent(event, player, dynamicCp)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerLeaveDynamicRaceCP", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
                 val dynamicCp = DynamicRaceCheckpoint[amxCallEvent.parameters[1] as Int] ?: return@hookCallback
                 val event = PlayerLeaveDynamicRaceCheckpointEvent(player, dynamicCp)
                 eventManager.dispatchEvent(event, player, dynamicCp)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnPlayerGiveDamageDynamicActor", { amxCallEvent ->
                 val player = Player.get(amxCallEvent.parameters[0] as Int) ?: return@hookCallback
@@ -123,35 +123,35 @@ object Callbacks {
                 val bodyPart = amxCallEvent.parameters[4] as Int
                 val event = PlayerGiveDamageDynamicActorEvent(player, actor, amount, model, bodyPart)
                 eventManager.dispatchEvent(event, player, actor, amount, model, bodyPart)
-            }, "iifii")
+            }, "i", "i", "f", "i", "i")
 
             hookCallback("OnDynamicActorStreamIn", { amxCallEvent ->
                 val actor = DynamicActor[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
                 val player = Player.get(amxCallEvent.parameters[1] as Int) ?: return@hookCallback
                 val event = DynamicActorStreamInEvent(actor, player)
                 eventManager.dispatchEvent(event, actor, player)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("OnDynamicActorStreamOut", { amxCallEvent ->
                 val actor = DynamicActor[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
                 val player = Player.get(amxCallEvent.parameters[1] as Int) ?: return@hookCallback
                 val event = DynamicActorStreamOutEvent(actor, player)
                 eventManager.dispatchEvent(event, actor, player)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("Streamer_OnItemStreamIn", { amxCallEvent ->
                 val type = StreamerType[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
                 val id = amxCallEvent.parameters[1] as Int
                 val event = ItemStreamInEvent(type, id)
                 eventManager.dispatchEvent(event, type, id)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("Streamer_OnItemStreamOut", { amxCallEvent ->
                 val type = StreamerType[amxCallEvent.parameters[0] as Int] ?: return@hookCallback
                 val id = amxCallEvent.parameters[1] as Int
                 val event = ItemStreamOutEvent(type, id)
                 eventManager.dispatchEvent(event, type, id)
-            }, "ii")
+            }, "i", "i")
 
             hookCallback("Streamer_OnPluginError", { amxCallEvent ->
                 val error = amxCallEvent.parameters[0] as String

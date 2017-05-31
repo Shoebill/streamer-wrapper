@@ -1,6 +1,6 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.data.Radius
 import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.Functions
@@ -22,8 +22,8 @@ class DynamicRaceCheckpoint(id: Int, val type: RaceCheckpointType, location: Rad
         id = -1
     }
 
-    override fun isDestroyed(): Boolean =
-            Functions.isValidDynamicRaceCp(this)
+    override val isDestroyed: Boolean
+        get() = Functions.isValidDynamicRaceCp(this)
 
     companion object {
         @JvmField val DEFAULT_STREAM_DISTANCE = 200f // Corresponds to STREAMER_RACE_CP_SD in streamer.inc

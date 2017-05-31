@@ -1,6 +1,6 @@
 package net.gtaun.shoebill.streamer
 
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.data.Location
 import net.gtaun.shoebill.resource.Plugin
 import net.gtaun.shoebill.streamer.autoupdate.StreamerUpdateService

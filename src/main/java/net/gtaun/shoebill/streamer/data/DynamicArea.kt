@@ -1,8 +1,8 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
-import net.gtaun.shoebill.`object`.Vehicle
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
+import net.gtaun.shoebill.entities.Vehicle
 import net.gtaun.shoebill.data.Vector3D
 import net.gtaun.shoebill.streamer.AllOpen
 import net.gtaun.shoebill.streamer.Functions
@@ -57,8 +57,8 @@ abstract class DynamicArea internal constructor(id: Int, val player: Player?) : 
     private var eventHandlers: MutableList<HandlerEntry> = mutableListOf()
 
     fun playerEnterArea(handler: EventHandler<PlayerEnterDynamicAreaEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerEnterDynamicAreaEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerEnterDynamicAreaEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
@@ -67,8 +67,8 @@ abstract class DynamicArea internal constructor(id: Int, val player: Player?) : 
             playerEnterArea(EventHandler { handler(it) })
 
     fun playerLeaveArea(handler: EventHandler<PlayerLeaveDynamicAreaEvent>): HandlerEntry {
-        val entry = eventManagerNode.registerHandler(PlayerLeaveDynamicAreaEvent::class.java, HandlerPriority.NORMAL,
-                Attentions.create().`object`(this), handler)
+        val entry = eventManagerNode.registerHandler(PlayerLeaveDynamicAreaEvent::class.java, handler, HandlerPriority.NORMAL,
+                Attentions.create().`object`(this))
         eventHandlers.add(entry)
         return entry
     }
@@ -78,7 +78,8 @@ abstract class DynamicArea internal constructor(id: Int, val player: Player?) : 
 
     private fun selfRemove() = areas.remove(this)
 
-    override fun isDestroyed(): Boolean = !Functions.isValidDynamicArea(this)
+    override val isDestroyed: Boolean
+        get() = !Functions.isValidDynamicArea(this)
 
     companion object {
         @JvmStatic

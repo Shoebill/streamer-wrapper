@@ -1,7 +1,7 @@
 package net.gtaun.shoebill.streamer.data
 
-import net.gtaun.shoebill.`object`.Destroyable
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Destroyable
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.constant.SkinModel
 import net.gtaun.shoebill.data.AngledLocation
 import net.gtaun.shoebill.data.Animation
@@ -34,7 +34,7 @@ class DynamicActor internal constructor(id: Int, val model: SkinModel, val playe
         set(value) = Functions.setDynamicActorPos(this, value)
 
     var location: AngledLocation
-        get() = AngledLocation(position, virtualWorld, angle)
+        get() = AngledLocation(position, angle, virtualWorld)
         set(value) {
             position = value
             virtualWorld = value.worldId
@@ -59,8 +59,8 @@ class DynamicActor internal constructor(id: Int, val model: SkinModel, val playe
     fun isStreamedIn(forPlayer: Player): Boolean =
             Functions.isDynamicActorStreamedIn(this, forPlayer)
 
-    override fun isDestroyed() =
-            !Functions.isValidDynamicActor(this)
+    override val isDestroyed: Boolean
+            get() = !Functions.isValidDynamicActor(this)
 
     override fun destroy() {
         if (isDestroyed) return

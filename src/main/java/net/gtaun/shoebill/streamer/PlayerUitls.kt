@@ -2,7 +2,7 @@
 
 package net.gtaun.shoebill.streamer
 
-import net.gtaun.shoebill.`object`.Player
+import net.gtaun.shoebill.entities.Player
 import net.gtaun.shoebill.streamer.data.DynamicCheckpoint
 import net.gtaun.shoebill.streamer.data.DynamicObject
 import net.gtaun.shoebill.streamer.data.DynamicRaceCheckpoint
